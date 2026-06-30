@@ -11,7 +11,12 @@ class AppTheme {
   static ThemeData _build(Brightness brightness) {
     final scheme = ColorScheme.fromSeed(seedColor: seed, brightness: brightness);
     final isLight = brightness == Brightness.light;
-    final base = ThemeData(useMaterial3: true, brightness: brightness, colorScheme: scheme);
+    final base = ThemeData(
+      useMaterial3: true,
+      brightness: brightness,
+      colorScheme: scheme,
+      fontFamily: 'Heebo',
+    );
 
     return base.copyWith(
       scaffoldBackgroundColor: isLight ? const Color(0xFFF6F6FB) : const Color(0xFF0E0E13),
