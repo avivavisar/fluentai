@@ -12,6 +12,7 @@ import { ProfileModule } from './profile/profile.module';
 import { PlacementModule } from './placement/placement.module';
 import { ConversationModule } from './conversation/conversation.module';
 import { VocabModule } from './vocab/vocab.module';
+import { ProgressModule } from './progress/progress.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { VocabModule } from './vocab/vocab.module';
     PlacementModule,
     ConversationModule,
     VocabModule,
+    ProgressModule,
   ],
 })
 export class AppModule {}

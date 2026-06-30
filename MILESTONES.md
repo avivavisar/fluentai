@@ -82,11 +82,13 @@ cross-cutting commitments, realized by the milestones tagged `[pillar]` below:
 - **M1.3 — Placement test** ✅ — `GET /v1/placement/questions` (no answers leaked) + `POST /v1/placement/submit` → server-grades MC → `AiService.gradePlacement` (real Claude) → stores `PlacementTest`, upserts profile CEFR + support. **First AI-backed endpoint.** *Test passed:* 10 Qs no leak; Claude returned B1/0.82 with rationale; profile CEFR persisted. **DONE.** *Dep:* M1.1.
 - **M1.4 — Conversation + chat turn** ✅ — `src/conversation/`: create/list/end conversation, `GET/POST :id/messages`; `POST` → `AiService.chatTurn` → persists user+assistant `Message`, `Correction[]` on the **user** msg, deduped `VocabItem[]`; ownership-checked. *Test passed:* deliberate errors → tutor reply with inline fix + comprehension check + **personalized** question (used onboarding interests), 2 bilingual GRAMMAR corrections (go→went, eat→ate), new vocab, CEFR B1. **DONE — core tutor live.** *Dep:* M1.1.
 - **M1.5 — Vocab capture + list** ✅ — `src/vocab/` `GET /v1/vocab` (incl. `srsReview`), newest-first. Capture already in M1.4. *Test passed:* the 2 words captured during M1.4 ("a getaway", "to unwind") returned with EN+HE definitions. **DONE.** *Dep:* M1.4.
-- **M1.6 — Progress/dashboard endpoint** — CEFR, words learned, recent sessions. *Test:* values reflect prior activity. *Dep:* M1.4.
-- **M1.7 — Flutter: Supabase auth** — login/signup + Google/Apple against Supabase; token wired to API client. *Test:* sign up in app → authenticated call succeeds. *Dep:* M0.3.
-- **M1.8 — Flutter: onboarding + placement screens** — against new API. *Test:* complete flow → CEFR shown. *Dep:* M1.3, M1.7.
-- **M1.9 — Flutter: chat screen** — bubbles + correction cards (EN↔HE toggle). *Test:* chat with an error → correction card appears. *Dep:* M1.4, M1.7.
-- **M1.10 — Flutter: dashboard screen** — CEFR + stats + recent. *Test:* matches backend data. *Dep:* M1.6, M1.7.
+- **M1.6 — Progress/dashboard endpoint** ✅ — `src/progress/` `GET /v1/progress` aggregates (Promise.all) CEFR+confidence, XP/level/streak (defaults until P4), wordsLearned, conversationsCount, recent 5. *Test passed:* B1 / words 2 / conversations 1. **DONE — Phase 1 backend complete.** *Dep:* M1.4.
+> **Phase 1 UI re-scoped (2026-06-30):** FRESH premium Flutter UI (discard v1 plain screens, reuse only data layer), default companion **"Maya"**, built around the **signature daily experience** (see plan). Voice "call" is the hero in P2; Phase-1 home centers the Talk CTA wired to text chat.
+
+- **M1.7 — New Flutter foundation** — rebuild `frontend/lib` fresh: design system (calm premium, RTL, dark mode), `supabase_flutter` auth (email/pw; Google/Apple wired), shared API client (Bearer), 4-tab shell (בית/שיחה/מילים/התקדמות), auth-gated routing. *Test:* `flutter analyze` clean, `build web` ok, sign up → `GET /v1/me` ok → shell. *Dep:* M0.3.
+- **M1.8 — Onboarding + placement (premium)** — engaging goal/interests/level flow + CEFR placement UI against the API. *Test:* complete flow → CEFR shown. *Dep:* M1.3, M1.7.
+- **M1.9 — Signature "Today" home** — companion (Maya) greeting by name, "Talk to your tutor" CTA, personalized daily plan, stats from `/v1/progress`. *Test:* home reflects real backend data + greeting. *Dep:* M1.6, M1.7.
+- **M1.10 — Premium bilingual chat** — polished tutor chat (text), correction cards EN↔HE, new-vocab surfacing. *Test:* chat with an error → premium correction card. *Dep:* M1.4, M1.7.
 
 ---
 
