@@ -11,6 +11,7 @@ import { StorageModule } from './storage/storage.module';
 import { ProfileModule } from './profile/profile.module';
 import { PlacementModule } from './placement/placement.module';
 import { ConversationModule } from './conversation/conversation.module';
+import { VocabModule } from './vocab/vocab.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ConversationModule } from './conversation/conversation.module';
     ProfileModule,
     PlacementModule,
     ConversationModule,
+    VocabModule,
   ],
 })
 export class AppModule {}
