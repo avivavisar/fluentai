@@ -26,6 +26,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   fonts:
-    - family: Heebo
+    - family: VarelaRound
       fonts:
-        - asset: assets/fonts/Heebo.ttf
+        - asset: assets/fonts/VarelaRound.ttf
