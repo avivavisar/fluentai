@@ -1,0 +1,13 @@
+{
+  "@@locale": "en",
+  "appTitle": "FluentAI",
+  "welcome": "Welcome to FluentAI",
+  "tagline": "Your AI English tutor",
+  "email": "Email",
+  "password": "Password",
+  "login": "Log in",
+  "signup": "Sign up",
+  "checkConnection": "Check backend connection",
+  "connected": "Connected",
+  "notConnected": "Not connected"
+}

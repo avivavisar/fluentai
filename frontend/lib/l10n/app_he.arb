@@ -1,0 +1,13 @@
+{
+  "@@locale": "he",
+  "appTitle": "FluentAI",
+  "welcome": "ברוך הבא ל-FluentAI",
+  "tagline": "מורה האנגלית החכם שלך",
+  "email": "אימייל",
+  "password": "סיסמה",
+  "login": "התחברות",
+  "signup": "הרשמה",
+  "checkConnection": "בדיקת חיבור לשרת",
+  "connected": "מחובר",
+  "notConnected": "לא מחובר"
+}

@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.env
+*.log
+boot.out
+boot.err
+.DS_Store

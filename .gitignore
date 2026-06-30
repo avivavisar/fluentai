@@ -1,0 +1,25 @@
+# Node
+node_modules/
+dist/
+*.log
+.env
+.env.local
+
+# Prisma
+backend/prisma/*.db
+
+# Flutter
+frontend/.dart_tool/
+frontend/build/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+frontend/.packages
+frontend/ios/Pods/
+frontend/android/.gradle/
+
+# Claude Code local settings (personal, not product code)
+.claude/settings.local.json
+
+# OS
+.DS_Store
+Thumbs.db

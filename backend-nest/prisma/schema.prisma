@@ -1,0 +1,437 @@
+// FluentAI database schema (covers all 8 phases).
+// Provider: PostgreSQL + pgvector. ORM: Prisma.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [vector]
+}
+
+enum Cefr {
+  A1
+  A2
+  B1
+  B2
+  C1
+  C2
+}
+
+enum Goal {
+  TRAVEL
+  BUSINESS
+  EXAM
+  CASUAL
+}
+
+enum SupportLevel {
+  NONE
+  LIGHT
+  HEAVY
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NEUTRAL
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+}
+
+enum CorrectionType {
+  GRAMMAR
+  VOCAB
+  WORD_CHOICE
+  PRONUNCIATION
+  NATURALNESS
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum MemoryType {
+  FACT
+  PREFERENCE
+  GOAL
+  MISTAKE_PATTERN
+  LIFE_EVENT
+}
+
+enum ScenarioMode {
+  FREE
+  TRAVEL
+  BUSINESS
+  INTERVIEW
+  STORY
+  ROLEPLAY
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  supabaseId   String?  @unique
+  passwordHash String?
+  uiLanguage   String   @default("he")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  lastActiveAt DateTime @default(now())
+
+  profile          Profile?
+  companion        Companion?
+  conversations    Conversation[]
+  vocab            VocabItem[]
+  srsReviews       SrsReview[]
+  mistakes         Mistake[]
+  gamification     Gamification?
+  achievements     Achievement[]
+  missions         Mission[]
+  scenarioSessions ScenarioSession[]
+  placementTests   PlacementTest[]
+  events           Event[]
+  subscription     Subscription?
+  usageCounters    UsageCounter[]
+  devices          Device[]
+  referralCode     ReferralCode?     @relation("ReferralOwner")
+  referralUsed     Referral?         @relation("ReferredUser")
+}
+
+model Profile {
+  id                 String       @id @default(cuid())
+  userId             String       @unique
+  user               User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  displayName        String?
+  nativeLanguage     String       @default("he")
+  targetLanguage     String       @default("en")
+  cefrLevel          Cefr?
+  cefrConfidence     Float        @default(0)
+  goal               Goal         @default(CASUAL)
+  interests          String[]     @default([])
+  hebrewSupportLevel SupportLevel @default(HEAVY)
+  voiceEnabled       Boolean      @default(true)
+  onboardingComplete Boolean      @default(false)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+}
+
+model Companion {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  gender    Gender   @default(NEUTRAL)
+  role      String   @default("friendly tutor")
+  persona   String   @default("")
+  voiceId   String?
+  createdAt DateTime @default(now())
+
+  memories CompanionMemory[]
+}
+
+model CompanionMemory {
+  id                   String     @id @default(cuid())
+  companionId          String
+  companion            Companion  @relation(fields: [companionId], references: [id], onDelete: Cascade)
+  type                 MemoryType
+  content              String
+  // Vector column managed via pgvector. Queried with raw SQL (cosine distance).
+  embedding            Unsupported("vector(1536)")?
+  importance           Int        @default(1)
+  sourceConversationId String?
+  createdAt            DateTime   @default(now())
+  lastReferencedAt     DateTime   @default(now())
+  expiresAt            DateTime?
+
+  @@index([companionId])
+}
+
+model Conversation {
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scenario    ScenarioMode @default(FREE)
+  mode        String       @default("text")
+  cefrAtStart Cefr?
+  summary     String?
+  startedAt   DateTime     @default(now())
+  endedAt     DateTime?
+
+  messages Message[]
+
+  @@index([userId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           MessageRole
+  content        String
+  audioUrl       String?
+  cefrTarget     Cefr?
+  createdAt      DateTime     @default(now())
+
+  corrections   Correction[]
+  pronunciation PronunciationScore?
+
+  @@index([conversationId])
+}
+
+model Correction {
+  id            String         @id @default(cuid())
+  messageId     String
+  message       Message        @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  type          CorrectionType
+  original      String
+  suggestion    String
+  explanationEn String
+  explanationHe String
+  severity      Severity       @default(LOW)
+  savedToDeck   Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+
+  @@index([messageId])
+}
+
+model PronunciationScore {
+  id               String   @id @default(cuid())
+  messageId        String   @unique
+  message          Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  overall          Float
+  accuracy         Float
+  fluency          Float
+  completeness     Float
+  phonemeBreakdown Json?
+  createdAt        DateTime @default(now())
+}
+
+model VocabItem {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  term            String
+  definitionEn    String
+  definitionHe    String
+  example         String?
+  sourceMessageId String?
+  createdAt       DateTime @default(now())
+
+  srsReview SrsReview?
+
+  @@index([userId])
+}
+
+model SrsReview {
+  id             String     @id @default(cuid())
+  userId         String
+  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vocabItemId    String?    @unique
+  vocabItem      VocabItem? @relation(fields: [vocabItemId], references: [id], onDelete: Cascade)
+  itemType       String     @default("vocab")
+  easeFactor     Float      @default(2.5)
+  intervalDays   Int        @default(0)
+  repetitions    Int        @default(0)
+  dueAt          DateTime   @default(now())
+  lastReviewedAt DateTime?
+
+  @@index([userId, dueAt])
+}
+
+model Mistake {
+  id         String         @id @default(cuid())
+  userId     String
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pattern    String
+  category   CorrectionType @default(GRAMMAR)
+  count      Int            @default(1)
+  lastSeenAt DateTime       @default(now())
+  resolved   Boolean        @default(false)
+
+  @@unique([userId, pattern])
+  @@index([userId])
+}
+
+model Gamification {
+  userId           String    @id
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  xpTotal          Int       @default(0)
+  level            Int       @default(1)
+  currentStreak    Int       @default(0)
+  longestStreak    Int       @default(0)
+  lastActivityDate DateTime?
+  dailyGoalMinutes Int       @default(10)
+  freezeTokens     Int       @default(0)
+  updatedAt        DateTime  @updatedAt
+}
+
+model Achievement {
+  id       String   @id @default(cuid())
+  userId   String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeKey String
+  earnedAt DateTime @default(now())
+
+  @@unique([userId, badgeKey])
+}
+
+model Mission {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  key         String
+  description String
+  target      Int      @default(1)
+  progress    Int      @default(0)
+  completed   Boolean  @default(false)
+  date        DateTime @default(now())
+
+  @@index([userId, date])
+}
+
+model ScenarioSession {
+  id        String       @id @default(cuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mode      ScenarioMode
+  title     String
+  state     Json?
+  createdAt DateTime     @default(now())
+
+  @@index([userId])
+}
+
+model PlacementTest {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers    Json
+  resultCefr Cefr?
+  confidence Float    @default(0)
+  rationale  String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  type      String
+  payload   Json?
+  createdAt DateTime @default(now())
+
+  @@index([type])
+}
+
+// ---------- Commercial (M0.8): subscriptions, entitlements, usage, devices, referrals ----------
+
+enum SubscriptionProvider {
+  MANUAL
+  STRIPE
+  APPLE
+  GOOGLE
+}
+
+enum SubscriptionStatus {
+  FREE
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  EXPIRED
+}
+
+enum PlanTier {
+  FREE
+  PREMIUM
+}
+
+enum DevicePlatform {
+  IOS
+  ANDROID
+  WEB
+}
+
+model Subscription {
+  id                     String               @id @default(cuid())
+  userId                 String               @unique
+  user                   User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider               SubscriptionProvider @default(MANUAL)
+  tier                   PlanTier             @default(FREE)
+  status                 SubscriptionStatus   @default(FREE)
+  providerCustomerId     String?
+  providerSubscriptionId String?
+  currentPeriodEnd       DateTime?
+  cancelAtPeriodEnd      Boolean              @default(false)
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+}
+
+model Entitlement {
+  id          String   @id @default(cuid())
+  tier        PlanTier
+  feature     String
+  enabled     Boolean  @default(true)
+  limitPerDay Int? // null = unlimited
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([tier, feature])
+}
+
+model UsageCounter {
+  id     String   @id @default(cuid())
+  userId String
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  day    DateTime @db.Date
+  metric String // e.g. "ai_messages", "voice_seconds", "tokens"
+  count  Int      @default(0)
+
+  @@unique([userId, day, metric])
+  @@index([userId, day])
+}
+
+model Device {
+  id         String         @id @default(cuid())
+  userId     String
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  platform   DevicePlatform
+  pushToken  String         @unique
+  lastSeenAt DateTime       @default(now())
+  createdAt  DateTime       @default(now())
+
+  @@index([userId])
+}
+
+model ReferralCode {
+  id          String     @id @default(cuid())
+  ownerUserId String     @unique
+  owner       User       @relation("ReferralOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  code        String     @unique
+  uses        Int        @default(0)
+  createdAt   DateTime   @default(now())
+  redemptions Referral[]
+}
+
+model Referral {
+  id             String       @id @default(cuid())
+  codeId         String
+  code           ReferralCode @relation(fields: [codeId], references: [id], onDelete: Cascade)
+  referredUserId String       @unique
+  referredUser   User         @relation("ReferredUser", fields: [referredUserId], references: [id], onDelete: Cascade)
+  rewardedAt     DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@index([codeId])
+}
