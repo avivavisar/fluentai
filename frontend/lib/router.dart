@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'core/auth_client.dart';
 import 'features/auth/auth_screen.dart';
-import 'features/shell/app_shell.dart';
+import 'features/gate/gate_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final auth = AuthClient.instance.client;
@@ -23,7 +23,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       GoRoute(path: '/auth', builder: (_, __) => const AuthScreen()),
-      GoRoute(path: '/', builder: (_, __) => const AppShell()),
+      GoRoute(path: '/', builder: (_, __) => const GateScreen()),
     ],
   );
 });
