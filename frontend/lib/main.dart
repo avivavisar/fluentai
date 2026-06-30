@@ -1,27 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'l10n/app_localizations.dart';
-import 'theme.dart';
-import 'screens/splash_screen.dart';
+import 'core/auth_client.dart';
+import 'core/config.dart';
+import 'router.dart';
+import 'theme/app_theme.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (AppConfig.isSupabaseConfigured) {
+    await AuthClient.instance.restore();
+  }
   runApp(const ProviderScope(child: FluentAIApp()));
 }
 
-class FluentAIApp extends StatelessWidget {
+class FluentAIApp extends ConsumerWidget {
   const FluentAIApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      onGenerateTitle: (ctx) => AppLocalizations.of(ctx)!.appTitle,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+    return MaterialApp.router(
+      title: 'FluentAI',
       debugShowCheckedModeBanner: false,
-      theme: buildAppTheme(),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      // Hebrew by default (RTL). A language switcher is added in Increment 1.
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: ThemeMode.system,
       locale: const Locale('he'),
-      home: const SplashScreen(),
+      supportedLocales: const [Locale('he'), Locale('en')],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      routerConfig: router,
     );
   }
 }

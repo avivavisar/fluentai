@@ -1,7 +1,7 @@
 name: fluentai
 description: FluentAI - AI English tutor for Hebrew speakers
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.2.0+1
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -13,8 +13,10 @@ dependencies:
     sdk: flutter
   intl: any
   flutter_riverpod: ^2.5.1
+  go_router: ^14.2.7
   http: ^1.2.2
-  shared_preferences: ^2.3.2
+  gotrue: ^2.11.0
+  web: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -23,4 +25,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  generate: true
