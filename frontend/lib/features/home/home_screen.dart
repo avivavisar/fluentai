@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../auth/auth_controller.dart';
 import '../profile/profile_providers.dart';
+import '../shell/shell_tab_provider.dart';
 import 'home_providers.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -76,7 +77,7 @@ class HomeScreen extends ConsumerWidget {
                 text: '$tutorName: טוב לראות אותך, ${_name(ref)}! מוכנים לשיעור קצר היום?',
               ),
               const SizedBox(height: 18),
-              _TalkCta(onTap: () => _soon(context)),
+              _TalkCta(onTap: () => ref.read(shellTabProvider.notifier).state = 1),
               const SizedBox(height: 22),
               Text('המשימה של היום', style: theme.textTheme.titleMedium),
               const SizedBox(height: 12),
