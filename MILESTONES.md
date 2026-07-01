@@ -95,7 +95,7 @@ cross-cutting commitments, realized by the milestones tagged `[pillar]` below:
 
 ## Phase 2 — Voice tutor
 
-- **M2.1 — TTS endpoint (ElevenLabs)** — text → audio. *Test:* returns valid MP3. *Dep:* M1.4.
+- **M2.1 — Tutor voice (TTS)** ✅ (Azure, not ElevenLabs) — `src/speech/` `POST /v1/speech/tts` → Azure neural TTS MP3 in the learner's **chosen tutor voice** (6 voices mapped in presets); Flutter `postBytes` + `audio_web.playAudioBytes` (data-URL) + speaker button on tutor chat bubbles. *Test passed:* real MP3 (48KB, valid frame) + build web. *Dep:* M1.4. (Azure key reused from v1's `.env`.) **Also:** switched preview to a single stable cloudflared tunnel + same-origin API proxy (serve_web).
 - **M2.2 — STT endpoint (Azure)** — audio → transcript. *Test:* spoken clip → correct text. *Dep:* M0.2.
 - **M2.3 — Pronunciation assessment (Azure)** — audio + ref → accuracy/fluency/completeness + phonemes. *Test:* score returned. *Dep:* M2.2.
 - **M2.4 — WebSocket voice pipeline** — STT → Claude → TTS over WS, with barge-in. *Test:* speak → spoken reply with low latency. *Dep:* M2.1, M2.2.
