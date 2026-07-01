@@ -96,12 +96,12 @@ cross-cutting commitments, realized by the milestones tagged `[pillar]` below:
 ## Phase 2 — Voice tutor
 
 - **M2.1 — Tutor voice (TTS)** ✅ (Azure, not ElevenLabs) — `src/speech/` `POST /v1/speech/tts` → Azure neural TTS MP3 in the learner's **chosen tutor voice** (6 voices mapped in presets); Flutter `postBytes` + `audio_web.playAudioBytes` (data-URL) + speaker button on tutor chat bubbles. *Test passed:* real MP3 (48KB, valid frame) + build web. *Dep:* M1.4. (Azure key reused from v1's `.env`.) **Also:** switched preview to a single stable cloudflared tunnel + same-origin API proxy (serve_web).
-- **M2.2 — STT endpoint (Azure)** — audio → transcript. *Test:* spoken clip → correct text. *Dep:* M0.2.
+- **M2.2 — STT (user speaks)** ✅ (browser Web Speech, not Azure yet) — `web/stt.js` + `core/stt_web.dart` (js_interop) recognize an English utterance in Chrome/Edge. Azure STT can replace it later for cross-browser. *Test:* build ok; live mic works. *Dep:* —.
 - **M2.3 — Pronunciation assessment (Azure)** — audio + ref → accuracy/fluency/completeness + phonemes. *Test:* score returned. *Dep:* M2.2.
-- **M2.4 — WebSocket voice pipeline** — STT → Claude → TTS over WS, with barge-in. *Test:* speak → spoken reply with low latency. *Dep:* M2.1, M2.2.
+- **M2.4 — Voice loop** ✅ (REST, not WS yet) — mic (browser STT) → `POST /:id/messages` (Claude, chosen persona) → auto-play `POST /v1/speech/tts` (tutor voice). WS streaming/barge-in is a later optimization. *Dep:* M2.1, M2.2.
 - **M2.5 — Recording + transcript persistence** — store audio in storage + transcript in DB. *Test:* replay a past turn. *Dep:* M2.4, M0.5.
 - **M2.6 — "Say it like a native"** — native audio of corrected phrase + comparison. *Test:* play model audio; show your-vs-native. *Dep:* M2.3.
-- **M2.7 — Flutter: voice-first talk screen** — call UX, mic, live transcript, states, feedback strip. *Test:* full spoken loop end-to-end. *Dep:* M2.4, M1.9.
+- **M2.7 — Voice-first talk screen** ✅ — `features/talk/talk_screen.dart`: full-screen "call" — pulsing tutor orb, big mic button, states (idle/listening/thinking/speaking), live transcript (you + tutor), auto-spoken reply. Home "דבר עם המורה" CTA opens it. *Test:* build ok; live spoken loop. *Dep:* M2.4. (Pronunciation feedback strip = M2.3, later.)
 
 ---
 

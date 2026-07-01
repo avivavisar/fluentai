@@ -92,6 +92,7 @@ export class ConversationService {
       history,
       userMessage: text,
       scenario: conv.scenario,
+      fast: conv.mode === 'voice',
     });
 
     // Tutor's reply.

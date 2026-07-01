@@ -4,6 +4,8 @@ import { env } from '../config/env';
 import { CEFR_ORDER, nextLevel, type Cefr } from './cefr';
 
 const MODEL = 'claude-opus-4-8';
+// Voice turns need to feel instant — use the fast model with a lean schema, no thinking.
+const FAST_MODEL = 'claude-haiku-4-5';
 // Translation is a simple task and cost-sensitive — use the cheap tier.
 const TRANSLATE_MODEL = 'claude-haiku-4-5';
 
@@ -147,6 +149,18 @@ const CHAT_SCHEMA = {
   additionalProperties: false,
 };
 
+// Lean schema for voice: only what's needed for a fast spoken turn.
+const CHAT_SCHEMA_FAST = {
+  type: 'object',
+  properties: {
+    reply: { type: 'string' },
+    corrections: { type: 'array', items: CORRECTION_ITEM_SCHEMA },
+    cefr_estimate: { type: 'string', enum: [...CEFR_ORDER] },
+  },
+  required: ['reply', 'corrections', 'cefr_estimate'],
+  additionalProperties: false,
+};
+
 const PLACEMENT_SCHEMA = {
   type: 'object',
   properties: {
@@ -192,10 +206,12 @@ export class AiService {
     history: ChatHistoryItem[];
     userMessage: string;
     scenario?: string;
+    fast?: boolean;
   }): Promise<ChatTurnResult> {
     const client = this.requireClient();
     const { profile, history, userMessage, scenario } = params;
     const target = nextLevel(profile.cefrLevel ?? null);
+    const fast = params.fast === true;
 
     const tutorName = profile.companionName ?? 'Maya';
     const genderLine =
@@ -217,6 +233,9 @@ export class AiService {
       `- goal: ${profile.goal}`,
       `- interests: ${profile.interests.join(', ') || 'unknown'}`,
       `- hebrew support level: ${profile.hebrewSupportLevel}`,
+      fast
+        ? `- VOICE MODE: this is a spoken conversation. Keep your "reply" SHORT and natural (1-2 sentences) and end with a question. Still add a correction if the learner made a clear mistake.`
+        : '',
       scenario && scenario !== 'FREE'
         ? `- scenario/roleplay: ${scenario}`
         : `- mode: free conversation`,
@@ -228,20 +247,31 @@ export class AiService {
     const recent = history.slice(-12);
 
     const resp = await client.messages.create({
-      model: MODEL,
-      max_tokens: 2000,
-      thinking: { type: 'adaptive' },
+      model: fast ? FAST_MODEL : MODEL,
+      max_tokens: fast ? 700 : 2000,
+      ...(fast ? {} : { thinking: { type: 'adaptive' } }),
       system: [
         { type: 'text', text: TUTOR_RUBRIC, cache_control: { type: 'ephemeral' } },
         { type: 'text', text: profileBlock },
       ],
-      output_config: { format: { type: 'json_schema', schema: CHAT_SCHEMA } },
+      output_config: { format: { type: 'json_schema', schema: fast ? CHAT_SCHEMA_FAST : CHAT_SCHEMA } },
       messages: [
         ...recent.map((m) => ({ role: m.role, content: m.content })),
         { role: 'user' as const, content: userMessage },
       ],
     } as Anthropic.Messages.MessageCreateParamsNonStreaming);
 
+    if (fast) {
+      const p = this.firstJson<Partial<ChatTurnResult>>(resp.content);
+      return {
+        reply: p.reply ?? '',
+        corrections: p.corrections ?? [],
+        new_vocab: [],
+        cefr_estimate: p.cefr_estimate ?? profile.cefrLevel ?? 'A2',
+        hebrew_support_used: false,
+        coaching: { fluency_en: '', fluency_he: '', tone_en: '', tone_he: '' },
+      };
+    }
     return this.firstJson<ChatTurnResult>(resp.content);
   }
 

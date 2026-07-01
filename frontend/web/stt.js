@@ -1,27 +1,37 @@
-// Minimal Web Speech API (speech-to-text) glue used by the Flutter app.
+// Web Speech API (speech-to-text) glue. Exposes a pollable state object so the
+// Flutter app can read progress reliably (no cross-language callbacks).
 (function () {
   let rec = null;
-  window.sttStart = function (lang, onFinal, onEnd, onError) {
+  const state = { status: 'idle', transcript: '', error: '' };
+  window._fluentaiStt = state;
+
+  window.sttStart = function (lang) {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) { if (onError) onError('unsupported'); if (onEnd) onEnd(); return; }
+    if (!SR) { state.status = 'error'; state.error = 'unsupported'; return; }
     try {
+      state.status = 'listening';
+      state.transcript = '';
+      state.error = '';
       rec = new SR();
       rec.lang = lang || 'en-US';
-      rec.interimResults = false;
+      rec.interimResults = true;
       rec.continuous = false;
       rec.maxAlternatives = 1;
       rec.onresult = function (e) {
         let t = '';
         for (let i = 0; i < e.results.length; i++) t += e.results[i][0].transcript;
-        if (onFinal) onFinal(t);
+        state.transcript = t;
+        if (e.results[e.results.length - 1].isFinal) state.status = 'final';
       };
-      rec.onerror = function (e) { if (onError) onError((e && e.error) || 'error'); };
-      rec.onend = function () { if (onEnd) onEnd(); };
+      rec.onerror = function (e) { state.status = 'error'; state.error = (e && e.error) || 'error'; };
+      rec.onend = function () { if (state.status !== 'final') state.status = state.transcript ? 'final' : 'ended'; };
       rec.start();
     } catch (err) {
-      if (onError) onError('' + err);
-      if (onEnd) onEnd();
+      state.status = 'error';
+      state.error = '' + err;
     }
   };
+
   window.sttStop = function () { if (rec) { try { rec.stop(); } catch (e) {} } };
+  window.sttPoll = function () { return JSON.stringify(window._fluentaiStt); };
 })();
