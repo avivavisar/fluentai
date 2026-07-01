@@ -269,6 +269,10 @@ class _ResultView extends ConsumerWidget {
                   Text('בוא נראה איפה דייקת ואיפה כדאי ללמוד',
                       style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
                   const SizedBox(height: 16),
+                  if ((result['writingFeedback']?.toString() ?? '').isNotEmpty) ...[
+                    _feedbackCard(theme, result['writingFeedback'].toString()),
+                    const SizedBox(height: 16),
+                  ],
                   ...review.map((r) => _reviewCard(theme, r as Map)),
                   const SizedBox(height: 8),
                   _levelCard(theme, cefr, rationale),
@@ -288,6 +292,37 @@ class _ResultView extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _feedbackCard(ThemeData theme, String feedback) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.secondary.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            radius: 20,
+            backgroundColor: theme.colorScheme.primary,
+            child: const Text('מ', style: TextStyle(color: Colors.white, fontSize: 16)),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('מאיה על הכתיבה שלך', style: theme.textTheme.titleSmall),
+                const SizedBox(height: 4),
+                Text(feedback, style: theme.textTheme.bodyMedium?.copyWith(height: 1.5)),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

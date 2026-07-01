@@ -56,6 +56,7 @@ export interface PlacementGrade {
   cefr_level: Cefr;
   confidence: number;
   rationale: string;
+  writing_feedback: string;
 }
 
 const TUTOR_RUBRIC = `You are "FluentAI", a warm, patient English tutor for native HEBREW speakers learning English.
@@ -149,8 +150,9 @@ const PLACEMENT_SCHEMA = {
     cefr_level: { type: 'string', enum: [...CEFR_ORDER] },
     confidence: { type: 'number' },
     rationale: { type: 'string' },
+    writing_feedback: { type: 'string' },
   },
-  required: ['cefr_level', 'confidence', 'rationale'],
+  required: ['cefr_level', 'confidence', 'rationale', 'writing_feedback'],
   additionalProperties: false,
 };
 
@@ -262,6 +264,14 @@ export class AiService {
       'Weigh both the multiple-choice accuracy across difficulty levels AND the writing sample',
       '(range of grammar, vocabulary, accuracy, coherence). Return your best single CEFR level,',
       'a confidence between 0 and 1, and a one-sentence rationale.',
+      '',
+      'ALSO return "writing_feedback": a warm, empathetic message IN HEBREW (2-4 sentences) to the learner',
+      'about THEIR WRITING SAMPLE specifically. Structure it kindly, like a caring teacher:',
+      '1) first genuinely praise something concrete they did well in their writing;',
+      '2) if there are mistakes, gently point out 1-2 of them and show the correction (quote the English);',
+      '3) reassure them warmly that they are in exactly the right place and will improve together with you.',
+      'Be encouraging, personal and kind — never harsh or discouraging. Speak as "מאיה" the tutor.',
+      "If the writing was left blank, warmly say that's completely fine and you'll practice writing together.",
     ].join('\n');
 
     const resp = await client.messages.create({

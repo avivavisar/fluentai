@@ -76,6 +76,7 @@ export class PlacementService {
         confidence: grade.confidence,
         rationale: grade.rationale,
         suggestedSupport: support,
+        writingFeedback: grade.writing_feedback,
       },
       review: graded.map((g) => ({
         prompt: g.prompt,
