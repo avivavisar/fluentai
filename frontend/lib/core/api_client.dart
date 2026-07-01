@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'auth_client.dart';
 import 'config.dart';
@@ -32,6 +33,13 @@ class ApiClient {
   Future<dynamic> patch(String path, [Object? body]) async {
     final res = await _client.patch(_uri(path), headers: _headers(), body: jsonEncode(body ?? {}));
     return _parse(res);
+  }
+
+  /// POST that returns raw bytes (e.g. TTS audio).
+  Future<Uint8List> postBytes(String path, [Object? body]) async {
+    final res = await _client.post(_uri(path), headers: _headers(), body: jsonEncode(body ?? {}));
+    if (res.statusCode >= 200 && res.statusCode < 300) return res.bodyBytes;
+    throw ApiException(res.statusCode, 'Request failed');
   }
 
   dynamic _parse(http.Response res) {

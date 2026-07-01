@@ -25,6 +25,7 @@ export const TUTOR_PRESETS: TutorPreset[] = [
       'Warm, patient and encouraging. Speaks slowly and very clearly with simple words. Perfect for building confidence.',
     pace: 'SLOW',
     accent: 'US',
+    voiceId: 'en-US-JennyNeural',
   },
   {
     key: 'noa',
@@ -35,6 +36,7 @@ export const TUTOR_PRESETS: TutorPreset[] = [
       'Cheerful, upbeat and highly encouraging. Celebrates small wins with genuine energy. Natural conversational pace.',
     pace: 'NATURAL',
     accent: 'US',
+    voiceId: 'en-US-AriaNeural',
   },
   {
     key: 'emily',
@@ -45,6 +47,7 @@ export const TUTOR_PRESETS: TutorPreset[] = [
       'Calm, elegant and articulate with a British accent. Polished, gentle and precise in her explanations.',
     pace: 'NATURAL',
     accent: 'UK',
+    voiceId: 'en-GB-SoniaNeural',
   },
   {
     key: 'ethan',
@@ -55,6 +58,7 @@ export const TUTOR_PRESETS: TutorPreset[] = [
       'A casual, friendly buddy. Uses natural everyday slang, keeps it light, and speaks a bit faster like a real friend.',
     pace: 'FAST',
     accent: 'US',
+    voiceId: 'en-US-GuyNeural',
   },
   {
     key: 'daniel',
@@ -65,6 +69,7 @@ export const TUTOR_PRESETS: TutorPreset[] = [
       'Calm, professional and clear. Focuses on practical work and business English, polite and well-structured.',
     pace: 'NATURAL',
     accent: 'US',
+    voiceId: 'en-US-DavisNeural',
   },
   {
     key: 'jack',
@@ -75,6 +80,7 @@ export const TUTOR_PRESETS: TutorPreset[] = [
       'Witty and fun with a British accent. Uses light humour to keep sessions enjoyable while still teaching well.',
     pace: 'NATURAL',
     accent: 'UK',
+    voiceId: 'en-GB-RyanNeural',
   },
 ];
 

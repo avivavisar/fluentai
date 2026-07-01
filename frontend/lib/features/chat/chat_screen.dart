@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/audio_web.dart';
 import '../auth/auth_controller.dart';
 import '../home/home_providers.dart';
 import 'widgets/correction_card.dart';
@@ -153,6 +154,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             ),
           ),
         ),
+        if (!isUser)
+          Align(alignment: Alignment.centerRight, child: _SpeakerButton(text: m.text)),
         if (!isUser && m.corrections.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(bottom: 8, left: 24),
@@ -178,6 +181,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       ],
     );
   }
+
+  // (speaker button defined below)
 
   Widget _typing(ThemeData theme, String tutorName) => Align(
         alignment: Alignment.centerRight,
@@ -216,4 +221,39 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ),
         ),
       );
+}
+
+class _SpeakerButton extends ConsumerStatefulWidget {
+  const _SpeakerButton({required this.text});
+  final String text;
+  @override
+  ConsumerState<_SpeakerButton> createState() => _SpeakerButtonState();
+}
+
+class _SpeakerButtonState extends ConsumerState<_SpeakerButton> {
+  bool _loading = false;
+
+  Future<void> _play() async {
+    if (_loading) return;
+    setState(() => _loading = true);
+    try {
+      final bytes = await ref.read(apiClientProvider).postBytes('/v1/speech/tts', {'text': widget.text});
+      playAudioBytes(bytes);
+    } catch (_) {
+      /* ignore playback errors */
+    }
+    if (mounted) setState(() => _loading = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: _play,
+      visualDensity: VisualDensity.compact,
+      color: Theme.of(context).colorScheme.primary,
+      icon: _loading
+          ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+          : const Icon(Icons.volume_up_rounded, size: 20),
+    );
+  }
 }
