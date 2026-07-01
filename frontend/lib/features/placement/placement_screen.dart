@@ -309,14 +309,14 @@ class _ResultView extends ConsumerWidget {
           CircleAvatar(
             radius: 20,
             backgroundColor: theme.colorScheme.primary,
-            child: const Text('מ', style: TextStyle(color: Colors.white, fontSize: 16)),
+            child: const Icon(Icons.auto_awesome_rounded, color: Colors.white, size: 18),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('מאיה על הכתיבה שלך', style: theme.textTheme.titleSmall),
+                Text('פידבק על הכתיבה שלך', style: theme.textTheme.titleSmall),
                 const SizedBox(height: 4),
                 Text(feedback, style: theme.textTheme.bodyMedium?.copyWith(height: 1.5)),
               ],

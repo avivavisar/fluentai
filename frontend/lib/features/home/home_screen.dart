@@ -38,6 +38,8 @@ class HomeScreen extends ConsumerWidget {
     final words = (progress?['wordsLearned'] ?? 0).toString();
     final convos = (progress?['conversationsCount'] ?? 0).toString();
     final streak = (progress?['streak'] ?? 0).toString();
+    final companion = ref.watch(companionProvider).valueOrNull;
+    final tutorName = (companion?['name']?.toString().trim().isNotEmpty ?? false) ? companion!['name'].toString() : 'Maya';
 
     return Scaffold(
       body: SafeArea(
@@ -69,7 +71,10 @@ class HomeScreen extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              _MayaBubble(text: 'טוב לראות אותך, ${_name(ref)}! מוכן/ה לשיעור קצר היום?'),
+              _MayaBubble(
+                avatarText: tutorName.substring(0, 1),
+                text: '$tutorName: טוב לראות אותך, ${_name(ref)}! מוכנים לשיעור קצר היום?',
+              ),
               const SizedBox(height: 18),
               _TalkCta(onTap: () => _soon(context)),
               const SizedBox(height: 22),
@@ -118,15 +123,16 @@ class _StreakPill extends StatelessWidget {
 }
 
 class _MayaBubble extends StatelessWidget {
-  const _MayaBubble({required this.text});
+  const _MayaBubble({required this.text, required this.avatarText});
   final String text;
+  final String avatarText;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CircleAvatar(radius: 20, backgroundColor: theme.colorScheme.primary, child: const Text('מ', style: TextStyle(color: Colors.white, fontSize: 16))),
+        CircleAvatar(radius: 20, backgroundColor: theme.colorScheme.primary, child: Text(avatarText, style: const TextStyle(color: Colors.white, fontSize: 16))),
         const SizedBox(width: 10),
         Expanded(
           child: Container(

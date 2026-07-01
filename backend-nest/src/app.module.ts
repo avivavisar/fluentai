@@ -13,6 +13,7 @@ import { PlacementModule } from './placement/placement.module';
 import { ConversationModule } from './conversation/conversation.module';
 import { VocabModule } from './vocab/vocab.module';
 import { ProgressModule } from './progress/progress.module';
+import { CompanionModule } from './companion/companion.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ProgressModule } from './progress/progress.module';
     ConversationModule,
     VocabModule,
     ProgressModule,
+    CompanionModule,
   ],
 })
 export class AppModule {}

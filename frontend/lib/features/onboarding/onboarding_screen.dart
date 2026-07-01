@@ -36,20 +36,47 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 }
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
+  static const _steps = 6;
   int _step = 0;
+  String? _gender;
   String? _goal;
   final Set<String> _interests = {};
   String _supportLevel = 'HEAVY';
+  String? _companionKey;
+  List<dynamic> _presets = [];
   bool _saving = false;
   String? _error;
 
+  @override
+  void initState() {
+    super.initState();
+    _loadPresets();
+  }
+
+  Future<void> _loadPresets() async {
+    try {
+      final data = await ref.read(apiClientProvider).get('/v1/companions/presets') as Map;
+      setState(() => _presets = data['presets'] as List);
+    } catch (_) {
+      /* tutors load lazily; step will show a spinner */
+    }
+  }
+
   bool get _canProceed {
-    if (_step == 1) return _goal != null;
-    return true;
+    switch (_step) {
+      case 1:
+        return _gender != null;
+      case 2:
+        return _goal != null;
+      case 5:
+        return _companionKey != null;
+      default:
+        return true;
+    }
   }
 
   Future<void> _next() async {
-    if (_step < 3) {
+    if (_step < _steps - 1) {
       setState(() => _step++);
       return;
     }
@@ -58,11 +85,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       _error = null;
     });
     try {
-      await ref.read(apiClientProvider).post('/v1/profile/onboarding', {
+      final api = ref.read(apiClientProvider);
+      await api.post('/v1/profile/onboarding', {
         'goal': _goal,
+        'gender': _gender,
         'interests': _interests.toList(),
         'hebrewSupportLevel': _supportLevel,
       });
+      await api.post('/v1/companion', {'key': _companionKey});
       ref.invalidate(profileProvider); // Gate advances to the placement test.
     } catch (_) {
       setState(() {
@@ -88,7 +118,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       onPressed: _saving ? null : () => setState(() => _step--),
                       icon: const Icon(Icons.arrow_forward_rounded),
                     ),
-                  Expanded(child: _Dots(count: 4, current: _step)),
+                  Expanded(child: _Dots(count: _steps, current: _step)),
                   const SizedBox(width: 48),
                 ],
               ),
@@ -110,7 +140,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 onPressed: (_canProceed && !_saving) ? _next : null,
                 child: _saving
                     ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.5))
-                    : Text(_step < 3 ? 'המשך' : 'סיום'),
+                    : Text(_step < _steps - 1 ? 'המשך' : 'סיום'),
               ),
             ),
           ],
@@ -130,14 +160,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               child: CircleAvatar(
                 radius: 40,
                 backgroundColor: theme.colorScheme.primary,
-                child: const Text('מ', style: TextStyle(color: Colors.white, fontSize: 30)),
+                child: const Icon(Icons.spa_rounded, color: Colors.white, size: 34),
               ),
             ),
             const SizedBox(height: 20),
-            Text('היי, אני מאיה', textAlign: TextAlign.center, style: theme.textTheme.headlineSmall),
+            Text('ברוך הבא ל-FluentAI', textAlign: TextAlign.center, style: theme.textTheme.headlineSmall),
             const SizedBox(height: 8),
             Text(
-              'המורה הפרטית שלך לאנגלית\nשלוש שאלות קצרות ומתחילים ללמוד',
+              'כמה שאלות קצרות כדי להתאים לך מורה ושיעורים אישיים',
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
             ),
@@ -145,20 +175,26 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         );
       case 1:
         return _StepLayout(
+          title: 'ספר/י לי עליך',
+          subtitle: 'כדי שהמורה יפנה אליך נכון',
+          child: Column(
+            children: [
+              _OptionTile(label: 'גבר', icon: Icons.man_rounded, selected: _gender == 'MALE', onTap: () => setState(() => _gender = 'MALE')),
+              _OptionTile(label: 'אישה', icon: Icons.woman_rounded, selected: _gender == 'FEMALE', onTap: () => setState(() => _gender = 'FEMALE')),
+            ],
+          ),
+        );
+      case 2:
+        return _StepLayout(
           title: 'מה המטרה שלך?',
           subtitle: 'כדי שאתאים לך את השיעורים',
           child: Column(
             children: _goals
-                .map((g) => _OptionTile(
-                      label: g.label,
-                      icon: g.icon,
-                      selected: _goal == g.value,
-                      onTap: () => setState(() => _goal = g.value),
-                    ))
+                .map((g) => _OptionTile(label: g.label, icon: g.icon, selected: _goal == g.value, onTap: () => setState(() => _goal = g.value)))
                 .toList(),
           ),
         );
-      case 2:
+      case 3:
         return _StepLayout(
           title: 'מה מעניין אותך?',
           subtitle: 'כדי שהשיחות יהיו רלוונטיות (אפשר לבחור כמה)',
@@ -176,20 +212,36 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             }).toList(),
           ),
         );
-      default:
+      case 4:
         return _StepLayout(
           title: 'כמה עברית שאעזור בה?',
           subtitle: 'תמיד אפשר לשנות בהמשך',
           child: Column(
             children: _support
-                .map((s) => _OptionTile(
-                      label: s.label,
-                      description: s.desc,
-                      selected: _supportLevel == s.value,
-                      onTap: () => setState(() => _supportLevel = s.value),
-                    ))
+                .map((s) => _OptionTile(label: s.label, description: s.desc, selected: _supportLevel == s.value, onTap: () => setState(() => _supportLevel = s.value)))
                 .toList(),
           ),
+        );
+      default:
+        return _StepLayout(
+          title: 'בחר/י את המורה שלך',
+          subtitle: 'אפשר להחליף בכל רגע בהגדרות',
+          child: _presets.isEmpty
+              ? const Padding(padding: EdgeInsets.all(24), child: Center(child: CircularProgressIndicator()))
+              : Column(
+                  children: _presets.map((raw) {
+                    final t = raw as Map;
+                    final key = t['key'].toString();
+                    final isFemale = t['gender'] == 'FEMALE';
+                    return _OptionTile(
+                      label: t['name'].toString(),
+                      description: t['taglineHe'].toString(),
+                      icon: isFemale ? Icons.woman_rounded : Icons.man_rounded,
+                      selected: _companionKey == key,
+                      onTap: () => setState(() => _companionKey = key),
+                    );
+                  }).toList(),
+                ),
         );
     }
   }
@@ -236,10 +288,7 @@ class _OptionTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected ? primary.withValues(alpha: 0.08) : theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: selected ? primary : theme.colorScheme.outlineVariant,
-            width: selected ? 2 : 1,
-          ),
+          border: Border.all(color: selected ? primary : theme.colorScheme.outlineVariant, width: selected ? 2 : 1),
         ),
         child: Row(
           children: [
@@ -284,10 +333,7 @@ class _Dots extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 3),
           width: on ? 22 : 8,
           height: 8,
-          decoration: BoxDecoration(
-            color: on ? primary : primary.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(4),
-          ),
+          decoration: BoxDecoration(color: on ? primary : primary.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(4)),
         );
       }),
     );

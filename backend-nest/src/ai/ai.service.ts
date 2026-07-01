@@ -13,6 +13,9 @@ export interface ChatProfile {
   goal: string;
   interests: string[];
   hebrewSupportLevel: 'NONE' | 'LIGHT' | 'HEAVY';
+  gender?: 'MALE' | 'FEMALE' | 'NEUTRAL' | null;
+  companionName?: string | null;
+  companionPersona?: string | null;
 }
 
 export interface ChatHistoryItem {
@@ -194,9 +197,21 @@ export class AiService {
     const { profile, history, userMessage, scenario } = params;
     const target = nextLevel(profile.cefrLevel ?? null);
 
+    const tutorName = profile.companionName ?? 'Maya';
+    const genderLine =
+      profile.gender === 'MALE'
+        ? 'male — in Hebrew, address him with MASCULINE grammatical forms'
+        : profile.gender === 'FEMALE'
+          ? 'female — in Hebrew, address her with FEMININE grammatical forms'
+          : 'unknown';
     const profileBlock = [
+      `YOUR IDENTITY: You are "${tutorName}", the learner's personal English tutor.`,
+      profile.companionPersona ? `YOUR PERSONA & SPEAKING STYLE: ${profile.companionPersona}` : '',
+      `Stay in this persona and speaking style consistently across the whole conversation.`,
+      ``,
       `LEARNER PROFILE:`,
       `- name: ${profile.displayName ?? 'the learner'}`,
+      `- gender: ${genderLine}`,
       `- current level (CEFR): ${profile.cefrLevel ?? 'unknown (assume A2)'}`,
       `- speak at about: ${target}`,
       `- goal: ${profile.goal}`,
@@ -205,7 +220,9 @@ export class AiService {
       scenario && scenario !== 'FREE'
         ? `- scenario/roleplay: ${scenario}`
         : `- mode: free conversation`,
-    ].join('\n');
+    ]
+      .filter((line) => line !== '')
+      .join('\n');
 
     // Cap history to keep token usage in check.
     const recent = history.slice(-12);
@@ -270,7 +287,7 @@ export class AiService {
       '1) first genuinely praise something concrete they did well in their writing;',
       '2) if there are mistakes, gently point out 1-2 of them and show the correction (quote the English);',
       '3) reassure them warmly that they are in exactly the right place and will improve together with you.',
-      'Be encouraging, personal and kind — never harsh or discouraging. Speak as "מאיה" the tutor.',
+      'Be encouraging, personal and kind — never harsh or discouraging, speaking warmly as their personal tutor.',
       "If the writing was left blank, warmly say that's completely fine and you'll practice writing together.",
     ].join('\n');
 

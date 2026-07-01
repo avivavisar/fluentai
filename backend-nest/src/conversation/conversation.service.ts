@@ -59,6 +59,7 @@ export class ConversationService {
   async postMessage(userId: string, conversationId: string, text: string) {
     const conv = await this.ownedConversation(userId, conversationId);
     const profile = await this.prisma.profile.findUnique({ where: { userId } });
+    const companion = await this.prisma.companion.findUnique({ where: { userId } });
 
     // Persist the learner's turn first.
     const userMsg = await this.prisma.message.create({
@@ -84,6 +85,9 @@ export class ConversationService {
         goal: profile?.goal ?? 'CASUAL',
         interests: profile?.interests ?? [],
         hebrewSupportLevel: profile?.hebrewSupportLevel ?? 'HEAVY',
+        gender: profile?.gender ?? null,
+        companionName: companion?.name,
+        companionPersona: companion?.persona,
       },
       history,
       userMessage: text,

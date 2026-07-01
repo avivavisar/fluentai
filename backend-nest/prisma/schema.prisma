@@ -111,6 +111,7 @@ model Profile {
   userId             String       @unique
   user               User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   displayName        String?
+  gender             Gender?
   nativeLanguage     String       @default("he")
   targetLanguage     String       @default("en")
   cefrLevel          Cefr?
