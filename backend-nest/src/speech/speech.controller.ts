@@ -6,6 +6,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { SpeechService } from './speech.service';
 import { TtsDto } from './dto/tts.dto';
+import { SttDto } from './dto/stt.dto';
 
 @ApiTags('speech')
 @ApiBearerAuth()
@@ -13,6 +14,13 @@ import { TtsDto } from './dto/tts.dto';
 @UseGuards(AuthGuard)
 export class SpeechController {
   constructor(private readonly speech: SpeechService) {}
+
+  /** Base64 PCM audio → transcript (Azure STT). */
+  @Post('stt')
+  async stt(@Body() dto: SttDto): Promise<{ text: string }> {
+    const text = await this.speech.transcribe(dto.audioBase64);
+    return { text };
+  }
 
   /** Text → the learner's tutor voice (MP3). */
   @Post('tts')

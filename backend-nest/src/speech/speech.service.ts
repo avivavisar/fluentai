@@ -48,4 +48,34 @@ export class SpeechService {
       );
     });
   }
+
+  /** Transcribe base64 16 kHz mono 16-bit PCM audio (from the browser recorder) via Azure STT. */
+  transcribe(pcmBase64: string): Promise<string> {
+    if (!this.available()) {
+      throw new ServiceUnavailableException('Azure Speech is not configured.');
+    }
+    const buf = Buffer.from(pcmBase64, 'base64');
+    const format = sdk.AudioStreamFormat.getWaveFormatPCM(16000, 16, 1);
+    const pushStream = sdk.AudioInputStream.createPushStream(format);
+    pushStream.write(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer);
+    pushStream.close();
+
+    const speechConfig = sdk.SpeechConfig.fromSubscription(env.AZURE_SPEECH_KEY!, env.AZURE_SPEECH_REGION!);
+    speechConfig.speechRecognitionLanguage = 'en-US';
+    const audioConfig = sdk.AudioConfig.fromStreamInput(pushStream);
+    const recognizer = new sdk.SpeechRecognizer(speechConfig, audioConfig);
+
+    return new Promise<string>((resolve, reject) => {
+      recognizer.recognizeOnceAsync(
+        (result) => {
+          recognizer.close();
+          resolve(result.reason === sdk.ResultReason.RecognizedSpeech ? result.text : '');
+        },
+        (err) => {
+          recognizer.close();
+          reject(new Error(typeof err === 'string' ? err : 'STT error'));
+        },
+      );
+    });
+  }
 }
