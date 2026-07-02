@@ -53,6 +53,7 @@ class _TalkScreenState extends ConsumerState<TalkScreen> with SingleTickerProvid
 
   void _toggleMic() {
     if (_state == _TalkState.idle) {
+      primeAudio(); // unlock audio within this tap so the tutor's voice can auto-play (mobile)
       _beginListening();
     } else if (_state == _TalkState.listening) {
       Stt.stop(); // final/ended will be picked up by the poll loop
