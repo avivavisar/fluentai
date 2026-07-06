@@ -1,0 +1,39 @@
+# Render Blueprint — deploys the FluentAI backend, which also serves the built Flutter
+# web app (one service, one URL). Create it in Render via: New > Blueprint > this repo.
+# Secret values (sync:false) are entered once in the Render dashboard, never committed.
+services:
+  - type: web
+    name: fluentai
+    runtime: node
+    rootDir: backend-nest
+    plan: free
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: node dist/main.js
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGIN
+        value: "*"
+      # --- Secrets: paste these in the Render dashboard (from backend-nest/.env) ---
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_JWT_SECRET
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: AZURE_SPEECH_KEY
+        sync: false
+      - key: AZURE_SPEECH_REGION
+        sync: false

@@ -41,4 +41,11 @@ self.addEventListener('activate', function (e) {
 '@
 $swPath = Join-Path $root 'build\web\flutter_service_worker.js'
 Set-Content -Path $swPath -Value $sw -Encoding utf8 -NoNewline
-Write-Host "Done -> build\web (service-worker kill switch written)"
+
+# Sync the fresh bundle into the backend's public/ dir. The NestJS service serves this
+# in production (Render), so the deployed site always matches the local build.
+$pub = Join-Path $root '..\backend-nest\public'
+if (Test-Path $pub) { Remove-Item $pub -Recurse -Force }
+New-Item -ItemType Directory -Force $pub | Out-Null
+Copy-Item (Join-Path $root 'build\web\*') $pub -Recurse -Force
+Write-Host "Done -> build\web + backend-nest\public (kill switch written, backend synced)"

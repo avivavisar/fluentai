@@ -1,5 +1,7 @@
+import { join } from 'node:path';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { RedisModule } from './common/redis/redis.module';
 import { HealthModule } from './health/health.module';
@@ -19,6 +21,25 @@ import { CompanionModule } from './companion/companion.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    // Serve the built Flutter web app so one service hosts both the site and the API.
+    // API routes (/v1, /health, /docs) are excluded from the static/SPA fallback.
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      exclude: ['/v1*', '/health*', '/docs*'],
+      serveStaticOptions: {
+        setHeaders: (res: { setHeader: (k: string, v: string) => void }, filePath: string) => {
+          // Never cache the files that decide which build everything else is (avoids
+          // stranding testers on a stale bundle, esp. iOS Safari).
+          if (
+            filePath.endsWith('index.html') ||
+            filePath.endsWith('flutter_bootstrap.js') ||
+            filePath.endsWith('flutter_service_worker.js')
+          ) {
+            res.setHeader('Cache-Control', 'no-store, must-revalidate');
+          }
+        },
+      },
+    }),
     PrismaModule,
     RedisModule,
     HealthModule,
