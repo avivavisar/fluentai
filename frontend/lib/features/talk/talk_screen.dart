@@ -89,8 +89,8 @@ class _TalkScreenState extends ConsumerState<TalkScreen> with SingleTickerProvid
   Future<void> _stopAndSend() async {
     _busy = true;
     _recordTimeout?.cancel();
-    final audioBase64 = Recorder.stop();
     setState(() => _state = _TalkState.thinking);
+    final audioBase64 = await Recorder.stop();
     _busy = false;
     if (audioBase64.isEmpty) {
       if (mounted) setState(() => _state = _TalkState.idle);

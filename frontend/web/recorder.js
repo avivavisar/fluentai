@@ -1,28 +1,38 @@
-// Records microphone audio as 16 kHz mono 16-bit PCM (base64) for server-side (Azure) STT.
-// Works reliably on iOS/Safari + Android/Chrome (no flaky Web Speech dictation UI).
+// Records the microphone with MediaRecorder (reliable on iOS Safari + Android + desktop),
+// returns the recorded audio as base64. The server decodes it (ffmpeg) to PCM for Azure STT.
+// The old WebAudio ScriptProcessor approach recorded silence on iOS — this replaces it.
 (function () {
-  let audioCtx, source, processor, muteGain, stream, chunks = [], recording = false, err = '';
+  let mediaRecorder, chunks = [], stream, err = '', mimeType = '';
+
+  function pickMime() {
+    var cands = ['audio/mp4', 'audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/ogg'];
+    if (typeof MediaRecorder === 'undefined' || !MediaRecorder.isTypeSupported) return '';
+    for (var i = 0; i < cands.length; i++) {
+      if (MediaRecorder.isTypeSupported(cands[i])) return cands[i];
+    }
+    return '';
+  }
 
   window.recStart = function () {
     err = '';
     chunks = [];
-    recording = false;
+    if (typeof MediaRecorder === 'undefined') {
+      err = 'NoMediaRecorder';
+      return Promise.resolve(false);
+    }
     return navigator.mediaDevices.getUserMedia({ audio: true }).then(function (s) {
       stream = s;
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.resume) audioCtx.resume();
-      source = audioCtx.createMediaStreamSource(stream);
-      processor = audioCtx.createScriptProcessor(4096, 1, 1);
-      processor.onaudioprocess = function (e) {
-        if (!recording) return;
-        chunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+      mimeType = pickMime();
+      try {
+        mediaRecorder = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+      } catch (e) {
+        mediaRecorder = new MediaRecorder(stream);
+        mimeType = mediaRecorder.mimeType || '';
+      }
+      mediaRecorder.ondataavailable = function (e) {
+        if (e.data && e.data.size > 0) chunks.push(e.data);
       };
-      muteGain = audioCtx.createGain();
-      muteGain.gain.value = 0; // avoid echoing the mic to the speakers
-      source.connect(processor);
-      processor.connect(muteGain);
-      muteGain.connect(audioCtx.destination);
-      recording = true;
+      mediaRecorder.start();
       return true;
     }).catch(function (e) {
       err = '' + ((e && e.name) || e);
@@ -31,42 +41,28 @@
   };
 
   window.recError = function () { return err; };
+  window.recMime = function () { return mimeType || (mediaRecorder && mediaRecorder.mimeType) || ''; };
 
+  // Async: waits for the recorder to flush, then resolves base64 of the recorded blob.
   window.recStop = function () {
-    recording = false;
-    try { if (processor) processor.disconnect(); if (source) source.disconnect(); if (muteGain) muteGain.disconnect(); } catch (e) {}
-    if (stream) stream.getTracks().forEach(function (t) { t.stop(); });
-    const inRate = audioCtx ? audioCtx.sampleRate : 44100;
-    let len = 0;
-    chunks.forEach(function (c) { len += c.length; });
-    const flat = new Float32Array(len);
-    let off = 0;
-    chunks.forEach(function (c) { flat.set(c, off); off += c.length; });
-    const pcm16 = downsample(flat, inRate, 16000);
-    if (audioCtx) { try { audioCtx.close(); } catch (e) {} }
-    const bytes = new Uint8Array(pcm16.buffer);
-    let bin = '';
-    const chunk = 0x8000;
-    for (let i = 0; i < bytes.length; i += chunk) {
-      bin += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
-    }
-    return btoa(bin);
+    return new Promise(function (resolve) {
+      if (!mediaRecorder) { resolve(''); return; }
+      mediaRecorder.onstop = function () {
+        try { if (stream) stream.getTracks().forEach(function (t) { t.stop(); }); } catch (e) {}
+        var type = window.recMime() || 'audio/mp4';
+        var blob = new Blob(chunks, { type: type });
+        if (!blob.size) { resolve(''); return; }
+        var reader = new FileReader();
+        reader.onloadend = function () {
+          var s = '' + reader.result;         // "data:<type>;base64,XXXX"
+          var i = s.indexOf(',');
+          resolve(i >= 0 ? s.substring(i + 1) : '');
+        };
+        reader.onerror = function () { resolve(''); };
+        reader.readAsDataURL(blob);
+      };
+      try { mediaRecorder.requestData(); } catch (e) {}
+      try { mediaRecorder.stop(); } catch (e) { resolve(''); }
+    });
   };
-
-  function downsample(input, inRate, outRate) {
-    let data = input;
-    if (inRate !== outRate) {
-      const ratio = inRate / outRate;
-      const newLen = Math.floor(input.length / ratio);
-      const out = new Float32Array(newLen);
-      for (let i = 0; i < newLen; i++) out[i] = input[Math.floor(i * ratio)];
-      data = out;
-    }
-    const int16 = new Int16Array(data.length);
-    for (let i = 0; i < data.length; i++) {
-      const s = Math.max(-1, Math.min(1, data[i]));
-      int16[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
-    }
-    return int16;
-  }
 })();
