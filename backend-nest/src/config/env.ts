@@ -30,7 +30,25 @@ const schema = z.object({
   ELEVENLABS_API_KEY: z.string().optional(),
 });
 
-const parsed = schema.safeParse(process.env);
+// Some hosts/users paste env values with surrounding quotes (e.g. copied straight from a
+// .env file). dotenv strips those for .env files, but real environment variables keep them —
+// which then breaks URL/connection-string parsing (REDIS_URL, DATABASE_URL, ...). Defensively
+// strip a single matched pair of surrounding quotes from every known variable.
+function unquote(v: string | undefined): string | undefined {
+  if (typeof v !== 'string') return v;
+  const t = v.trim();
+  if (
+    t.length >= 2 &&
+    ((t.startsWith('"') && t.endsWith('"')) || (t.startsWith("'") && t.endsWith("'")))
+  ) {
+    return t.slice(1, -1);
+  }
+  return t;
+}
+const rawEnv: Record<string, string | undefined> = {};
+for (const key of Object.keys(schema.shape)) rawEnv[key] = unquote(process.env[key]);
+
+const parsed = schema.safeParse(rawEnv);
 if (!parsed.success) {
   // eslint-disable-next-line no-console
   console.error('Invalid environment variables:', parsed.error.flatten().fieldErrors);
