@@ -1,5 +1,15 @@
 import 'dotenv/config';
+import { existsSync } from 'node:fs';
+import { config as loadDotenv } from 'dotenv';
 import { z } from 'zod';
+
+// On Render (and similar hosts) secrets can be supplied as ONE mounted "Secret File"
+// instead of many dashboard fields (which are easy to paste wrong — stray quotes, a
+// "KEY=" prefix, whitespace). If present, load it and let it override anything else.
+// dotenv parses proper .env syntax and strips quotes for us.
+for (const secretPath of ['/etc/secrets/.env', '/etc/secrets/env']) {
+  if (existsSync(secretPath)) loadDotenv({ path: secretPath, override: true });
+}
 
 // Centralised, validated environment. Most service keys are optional so the API can boot
 // (and serve /health) before every managed service is wired — health reports what's missing.

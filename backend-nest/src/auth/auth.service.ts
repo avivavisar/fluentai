@@ -13,9 +13,17 @@ export class AuthService {
     : null;
   // Modern Supabase signs user access tokens with asymmetric keys (ES256/RS256) exposed via JWKS.
   // Keys are fetched + cached by jose. Support both schemes.
-  private readonly jwks: ReturnType<typeof createRemoteJWKSet> | null = env.SUPABASE_URL
-    ? createRemoteJWKSet(new URL(`${env.SUPABASE_URL}/auth/v1/.well-known/jwks.json`))
-    : null;
+  private readonly jwks: ReturnType<typeof createRemoteJWKSet> | null = AuthService.makeJwks();
+
+  // Never let a bad/blank SUPABASE_URL crash the app at boot — JWKS just stays unavailable.
+  private static makeJwks(): ReturnType<typeof createRemoteJWKSet> | null {
+    if (!env.SUPABASE_URL) return null;
+    try {
+      return createRemoteJWKSet(new URL(`${env.SUPABASE_URL}/auth/v1/.well-known/jwks.json`));
+    } catch {
+      return null;
+    }
+  }
 
   constructor(private readonly prisma: PrismaService) {}
 

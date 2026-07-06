@@ -8,12 +8,21 @@ export const MEDIA_BUCKET = 'media';
 @Injectable()
 export class StorageService implements OnModuleInit {
   private readonly logger = new Logger(StorageService.name);
-  private readonly client: SupabaseClient | null =
-    env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY
-      ? createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
-          auth: { persistSession: false, autoRefreshToken: false },
-        })
-      : null;
+  private readonly client: SupabaseClient | null = StorageService.makeClient();
+
+  // Never let a bad/blank SUPABASE_URL crash the whole app at boot — storage just stays off.
+  private static makeClient(): SupabaseClient | null {
+    if (!(env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY)) return null;
+    try {
+      return createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
+        auth: { persistSession: false, autoRefreshToken: false },
+      });
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn(`Storage disabled (invalid Supabase config): ${(err as Error).message}`);
+      return null;
+    }
+  }
 
   isConfigured(): boolean {
     return this.client !== null;
