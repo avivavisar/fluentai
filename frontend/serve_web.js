@@ -54,13 +54,39 @@ http
       file = path.join(root, 'index.html');
     }
     const ext = path.extname(file).toLowerCase();
+    const base = path.basename(file);
+    // Files that must never be cached: they decide which version everything else is.
+    // Everything else may be cached but MUST be revalidated (no-cache -> 304 when unchanged),
+    // so testers are never stranded on a stale build yet large assets stay fast.
+    const neverCache = base === 'index.html' || base === 'flutter_bootstrap.js' || base === 'flutter_service_worker.js';
+    let stat;
+    try {
+      stat = fs.statSync(file);
+    } catch (_) {
+      res.writeHead(404);
+      res.end('not found');
+      return;
+    }
+    const lastMod = stat.mtime.toUTCString();
+    if (!neverCache && req.headers['if-modified-since'] === lastMod) {
+      res.writeHead(304);
+      res.end();
+      return;
+    }
     fs.readFile(file, (err, data) => {
       if (err) {
         res.writeHead(404);
         res.end('not found');
         return;
       }
-      res.writeHead(200, { 'Content-Type': types[ext] || 'application/octet-stream' });
+      const headers = { 'Content-Type': types[ext] || 'application/octet-stream' };
+      if (neverCache) {
+        headers['Cache-Control'] = 'no-store, must-revalidate';
+      } else {
+        headers['Cache-Control'] = 'no-cache';
+        headers['Last-Modified'] = lastMod;
+      }
+      res.writeHead(200, headers);
       res.end(data);
     });
   })
