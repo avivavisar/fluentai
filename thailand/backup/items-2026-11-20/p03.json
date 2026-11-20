@@ -1,0 +1,15 @@
+{
+  "cat": "night",
+  "cost": "כניסה משתנה לפי DJ",
+  "dest": "phuket",
+  "dist": "הליכה (בנגלה)",
+  "link": "https://www.google.com/maps/search/?api=1&query=Illuzion+Phuket",
+  "mine": "",
+  "name": "Illuzion",
+  "note": "המועדון הגדול של פטונג – EDM ושואו. לבדוק מי מנגן באותו ערב.",
+  "order": 21,
+  "score": 8,
+  "status": "",
+  "tag": "HIGH",
+  "when": "לילה"
+}

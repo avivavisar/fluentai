@@ -1,0 +1,15 @@
+{
+  "cat": "food",
+  "cost": "",
+  "dest": "samui",
+  "dist": "~20 דק'",
+  "link": "https://www.google.com/maps/search/?api=1&query=Fisherman+Village+Bophut",
+  "mine": "",
+  "name": "Fisherman's Village, בופוט",
+  "note": "שוק + מסעדות על המים.",
+  "order": 40,
+  "score": 8,
+  "status": "",
+  "tag": "HIGH",
+  "when": "שוק לילה בשישי (לאמת)"
+}

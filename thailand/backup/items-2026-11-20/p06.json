@@ -1,0 +1,15 @@
+{
+  "cat": "night",
+  "cost": "יקר",
+  "dest": "phuket",
+  "dist": "~35 דק'",
+  "link": "https://www.google.com/maps/search/?api=1&query=Yona+Beach+Club+Phuket",
+  "mine": "",
+  "name": "Yona Beach Club",
+  "note": "מועדון חוף צף, ייחודי. אם יש יום פנוי.",
+  "order": 24,
+  "score": 7,
+  "status": "",
+  "tag": "OPTIONAL",
+  "when": "יום"
+}

@@ -1,0 +1,15 @@
+{
+  "cat": "sea",
+  "cost": "מעבורת זולה מבאלי האי",
+  "dest": "pattaya",
+  "dist": "~45 דק' עם הפלגה",
+  "link": "https://www.google.com/maps/search/?api=1&query=Koh+Larn",
+  "mine": "",
+  "name": "קו לאן (Koh Larn)",
+  "note": "חופים צלולים מחוץ לעיר.",
+  "order": 30,
+  "score": 8,
+  "status": "",
+  "tag": "HIGH",
+  "when": "יום"
+}

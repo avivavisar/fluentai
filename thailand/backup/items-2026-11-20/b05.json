@@ -1,0 +1,15 @@
+{
+  "cat": "food",
+  "cost": "זול",
+  "dest": "bangkok",
+  "dist": "",
+  "link": "https://www.google.com/maps/search/?api=1&query=Yaowarat+Road+Bangkok",
+  "mine": "",
+  "name": "צ'יינה טאון – יאווראט",
+  "note": "אוכל רחוב לילי.",
+  "order": 30,
+  "score": 9,
+  "status": "",
+  "tag": "MUST",
+  "when": "ערב"
+}

@@ -1,0 +1,15 @@
+{
+  "cat": "move",
+  "cost": "מונית מ-~$44 · אוטובוס ~$5",
+  "dest": "bangkok",
+  "dist": "~2 שעות",
+  "link": "https://12go.asia/en/travel/pattaya/bangkok?z=521215",
+  "mine": "",
+  "name": "פטאיה → בנגקוק",
+  "note": "מונית מלון-למלון הכי נוח. מיניונים זולים – ביקורות על איחורים.",
+  "order": 1,
+  "score": null,
+  "status": "",
+  "tag": "HIGH",
+  "when": "18.12"
+}

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>תאילנד 2026 – הסוכן שלנו</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Secular+One&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: a friend's field guide for two guys on a party-and-islands trip; direct, warm, quick to scan on a phone.
+   IDEA: a long-tail boat's route card – five stops on one sea line, each opening its own deck of picks.
+   PICTURE: the route itself – a wave line with five island stops, today's stop lit; it is also the navigation.
+   COLOUR and TYPE: deep Andaman teal ground, Bangkok-taxi pink as the sharp accent, white cards; Secular One titles, Heebo body (Hebrew).
+   LAYOUT: route band on top, filter row, card list in one or two columns, agent chat as a drawer from the side. */
+:root{color-scheme:light dark;
+--bg:light-dark(#f4f7f6,#061a1f);--card:light-dark(#ffffff,#0d2a31);--ink:light-dark(#0f1f22,#e9f3f2);--soft:light-dark(#55686b,#9db6b6);
+--sea:light-dark(#0b4f5c,#0a3a44);--sea2:light-dark(#127286,#1b6a79);--pink:#e4007c;--pinkbg:light-dark(#fde6f2,#3a0f27);--line:light-dark(#dbe5e4,#1d3c43);
+--must:#e4007c;--high:#127286;--opt:#7b8a8c;--gem:#8a5cf6;--back:#b7791f}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Heebo,Arial,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:"Secular One",Heebo,sans-serif;font-weight:400;margin:0;text-wrap:balance}
+a{color:inherit}
+button,input,select,textarea{font:inherit;font-size:16px;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.top{background:var(--sea);color:#fff;padding:22px max(5vw,16px) 8px}
+.top h1{font-size:clamp(28px,5vw,44px);line-height:1.05}
+.top p{margin:6px 0 0;color:#cfe6e6;font-size:15px}
+.route{position:relative;height:150px;margin-top:6px}
+.route svg{position:absolute;inset:0;width:100%;height:100%}
+.stops{position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.stop{background:none;border:0;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 2px 6px;min-height:44px;text-align:center}
+.stop b{font-family:"Secular One",sans-serif;font-weight:400;font-size:clamp(14px,2.4vw,19px);line-height:1.1}
+.stop small{font-size:13px;color:#bfe0e0;white-space:nowrap}
+.stop[aria-current=true] b{color:#fff;background:var(--pink);padding:2px 8px;border-radius:8px}
+.band{padding:16px max(5vw,16px) 120px;max-width:1240px;margin:0 auto}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+.head h2{font-size:clamp(24px,4vw,32px);line-height:1.1}
+.hotel{color:var(--soft);font-size:15px}
+.today{background:var(--pinkbg);border-radius:12px;padding:10px 14px;margin:0 0 12px;font-size:15px}
+.filters{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 14px;min-height:40px;font-size:15px}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tools input{flex:1 1 200px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--card);min-height:44px}
+.tools select{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--card);min-height:44px}
+.btn{border:0;border-radius:12px;padding:10px 16px;min-height:44px;background:var(--pink);color:#fff;font-weight:700}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.card.done{opacity:.62}.card.skip{opacity:.4}
+.row1{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tag{font-size:13px;font-weight:700;padding:2px 8px;border-radius:6px;color:#fff;white-space:nowrap}
+.t-MUST{background:var(--must)}.t-HIGH{background:var(--high)}.t-OPTIONAL{background:var(--opt)}.t-HIDDEN{background:var(--gem)}.t-BACKUP{background:var(--back)}
+.score{margin-inline-start:auto;font-weight:700;white-space:nowrap;font-size:15px}
+.card h3{font-size:20px;line-height:1.2}
+.meta{color:var(--soft);font-size:14px}
+.note{font-size:15px;margin:0}
+.mine{border:1px dashed var(--line);border-radius:10px;padding:8px 10px;width:100%;min-height:44px;resize:vertical;background:transparent}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+.st{border:1px solid var(--line);background:transparent;border-radius:10px;padding:6px 10px;min-height:40px;font-size:14px}
+.st[aria-pressed=true]{background:var(--sea2);border-color:var(--sea2);color:#fff}
+.mini{background:none;border:0;color:var(--soft);font-size:14px;min-height:40px;padding:0 6px;text-decoration:underline}
+.empty{padding:40px 10px;text-align:center;color:var(--soft)}
+.status{font-size:14px;color:var(--soft);min-height:20px}
+dialog{border:0;border-radius:18px;padding:0;width:min(560px,94vw);background:var(--card);color:var(--ink)}
+dialog::backdrop{background:#0008}
+form.ed{display:grid;gap:10px;padding:18px}
+form.ed label{display:grid;gap:4px;font-size:14px;color:var(--soft)}
+form.ed input,form.ed select,form.ed textarea{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--bg);min-height:44px}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.fab{position:fixed;inset-inline-start:16px;bottom:16px;z-index:5;box-shadow:0 6px 20px #0005;border-radius:999px;padding:12px 20px}
+.drawer{position:fixed;inset-block:0;inset-inline-start:0;width:min(440px,100vw);background:var(--card);z-index:10;display:flex;flex-direction:column;box-shadow:0 0 30px #0006;transform:translateX(105%);transition:transform .25s}
+.drawer.open{transform:none}
+.dh{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--sea);color:#fff}
+.dh h3{font-size:20px}
+.msgs{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.m{padding:9px 12px;border-radius:14px;max-width:88%;white-space:pre-wrap;font-size:15px}
+.m.u{background:var(--pinkbg);align-self:flex-start}
+.m.a{background:var(--bg);align-self:flex-end;border:1px solid var(--line)}
+.cf{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line)}
+.cf textarea{flex:1;border:1px solid var(--line);border-radius:12px;padding:10px;min-height:48px;max-height:140px;background:var(--bg)}
+@media (prefers-reduced-motion:reduce){.drawer{transition:none}}
+@media(max-width:600px){.route{height:128px}.stop small{font-size:12px}.two{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>תאילנד 2026 – הסוכן שלנו</h1>
+  <p>אביב ואופק · 25.11–20.12 · פוקט ← קופנגן ← קוסמוי ← פטאיה ← בנגקוק</p>
+  <div class="route">
+    <svg id="wave" aria-hidden="true"></svg>
+    <nav class="stops" id="stops" aria-label="יעדים"></nav>
+  </div>
+</header>
+
+<main class="band">
+  <div class="head"><h2 id="destTitle"></h2><span class="hotel" id="hotel"></span></div>
+  <div class="today" id="today" hidden></div>
+  <div class="filters" id="cats" role="group" aria-label="קטגוריה"></div>
+  <div class="tools">
+    <input id="q" type="search" placeholder="חיפוש במאגר…" aria-label="חיפוש">
+    <select id="stf" aria-label="סטטוס">
+      <option value="">כל הסטטוסים</option><option value="want">רוצים</option><option value="none">לא סומן</option><option value="done">עשינו</option><option value="skip">מדלגים</option>
+    </select>
+    <button class="btn" id="addBtn" type="button">+ הוספה</button>
+  </div>
+  <div class="status" id="status">טוען את המאגר…</div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<button class="btn fab" id="chatBtn" type="button" hidden>שאלו את הסוכן</button>
+
+<aside class="drawer" id="drawer" aria-label="צ'אט עם הסוכן">
+  <div class="dh"><h3>הסוכן האישי</h3><button class="btn ghost" id="closeChat" type="button" style="color:#fff;border-color:#fff6">סגירה</button></div>
+  <div class="msgs" id="msgs"></div>
+  <form class="cf" id="chatForm"><textarea id="chatIn" placeholder="למשל: אנחנו בפטונג, 22:00, מה עושים?" aria-label="הודעה"></textarea><button class="btn" type="submit">שליחה</button></form>
+</aside>
+
+<dialog id="dlg">
+  <form class="ed" id="edForm" method="dialog">
+    <h3 id="edTitle">פריט</h3>
+    <label>שם<input name="name" required></label>
+    <div class="two">
+      <label>יעד<select name="dest"></select></label>
+      <label>קטגוריה<select name="cat"></select></label>
+    </div>
+    <div class="two">
+      <label>סיווג<select name="tag"><option>MUST</option><option>HIGH</option><option>OPTIONAL</option><option>HIDDEN GEM</option><option>BACKUP</option></select></label>
+      <label>התאמה (1–10)<input name="score" type="number" min="1" max="10"></label>
+    </div>
+    <div class="two">
+      <label>מתי<input name="when"></label>
+      <label>מחיר משוער<input name="cost"></label>
+    </div>
+    <label>מרחק / איך מגיעים<input name="dist"></label>
+    <label>למה זה מתאים לנו<textarea name="note" rows="3"></textarea></label>
+    <label>קישור (Maps / הזמנה)<input name="link" type="url" dir="ltr"></label>
+    <div class="acts"><button class="btn" value="save">שמירה</button><button class="btn ghost" value="cancel" formnovalidate>ביטול</button><button class="mini" id="delBtn" type="button">מחיקה</button></div>
+  </form>
+</dialog>
+
+<script>
+{
+const DESTS=[
+ {k:"phuket",n:"פוקט",d:"25.11–1.12",s:"2026-11-25",e:"2026-12-01",h:"Hotel Clover Patong"},
+ {k:"phangan",n:"קופנגן",d:"1–6.12",s:"2026-12-01",e:"2026-12-06",h:"Phangan Bayshore Resort · האד רין נוק"},
+ {k:"samui",n:"קוסמוי",d:"6–12.12",s:"2026-12-06",e:"2026-12-12",h:"Arkbar Beach Club & Resort · צ'אוונג"},
+ {k:"pattaya",n:"פטאיה",d:"12–18.12",s:"2026-12-12",e:"2026-12-18",h:"Hotel Amber Pattaya · Soi Buakhao"},
+ {k:"bangkok",n:"בנגקוק",d:"18–20.12",s:"2026-12-18",e:"2026-12-20",h:"Novotel Platinum Pratunam"}];
+const CATS=[["all","הכול"],["event","אירועים"],["night","חיי לילה"],["sea","חופים ושייט"],["extreme","אקסטרים וטבע"],["food","אוכל"],["shop","שופינג"],["move","תחבורה"],["book","להזמין"],["warn","שימו לב"]];
+const ST={want:"רוצים",done:"עשינו",skip:"מדלגים"};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const safeUrl=u=>/^https:\/\//.test(u||"")?u:"";
+const today=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Bangkok"}).format(new Date());
+let items=[],chat=[],db=null,canWrite=true;
+let cur=(location.hash||"").slice(1);
+if(!DESTS.some(d=>d.k===cur)){const t=DESTS.find(d=>today>=d.s&&today<d.e);cur=t?t.k:"phuket"}
+let cat="all";
+
+const wave=$("#wave");
+const drawWave=()=>{const W=wave.clientWidth,H=wave.clientHeight;if(!W)return;const y=H*0.42;let p=`M0 ${y}`;for(let x=0;x<=W;x+=W/20){p+=` Q ${x+W/40} ${y-10} ${x+W/20} ${y}`}
+ const dots=DESTS.map((d,i)=>{const cx=W*(1-(i+.5)/5);const on=d.k===cur;return `<circle cx="${cx}" cy="${y}" r="${on?13:8}" fill="${on?"#e4007c":"#fff"}" stroke="#0b4f5c" stroke-width="3"/>`}).join("");
+ wave.innerHTML=`<path d="${p}" fill="none" stroke="#7fc4c9" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/>${dots}`};
+const roW=new ResizeObserver(drawWave);roW.observe(wave);
+
+function renderStops(){$("#stops").innerHTML=DESTS.map(d=>`<button class="stop" type="button" data-k="${d.k}" aria-current="${d.k===cur}"><b>${d.n}</b><small>${d.d}</small></button>`).join("")}
+function renderCats(){$("#cats").innerHTML=CATS.map(([k,n])=>`<button class="chip" type="button" data-c="${k}" aria-pressed="${k===cat}">${n}</button>`).join("")}
+
+function render(){
+ const D=DESTS.find(d=>d.k===cur);
+ $("#destTitle").textContent=`${D.n} · ${D.d}`;$("#hotel").textContent="🏨 "+D.h;
+ const isNow=today>=D.s&&today<D.e;
+ $("#today").hidden=!isNow;if(isNow)$("#today").textContent=`אתם כאן עכשיו (${today.split("-").reverse().join(".")}). לחצו "שאלו את הסוכן" למה עושים היום.`;
+ const q=$("#q").value.trim().toLowerCase(),sf=$("#stf").value;
+ const list=items.filter(i=>(i.dest===cur||i.dest==="all")&&(cat==="all"||i.cat===cat)
+   &&(!sf||(sf==="none"?!i.status:i.status===sf))
+   &&(!q||[i.name,i.note,i.mine,i.when].join(" ").toLowerCase().includes(q)))
+  .sort((a,b)=>(a.order??999)-(b.order??999)||(b.score||0)-(a.score||0));
+ $("#grid").innerHTML=list.length?list.map(card).join(""):`<div class="empty">${items.length?"אין פריטים בסינון הזה.":"המאגר עדיין ריק."}</div>`;
+ drawWave();
+}
+function card(i){
+ const tg=(i.tag||"OPTIONAL").split(" ")[0];const link=safeUrl(i.link);
+ const meta=[i.when,i.cost,i.dist].filter(Boolean).map(esc).join(" · ");
+ return `<article class="card ${esc(i.status||"")}" data-id="${esc(i.id)}">
+ <div class="row1"><span class="tag t-${esc(tg)}">${esc(i.tag||"OPTIONAL")}</span>${i.dest==="all"?'<span class="meta">כל הטיול</span>':""}${i.score?`<span class="score">${esc(i.score)}/10</span>`:""}</div>
+ <h3>${link?`<a href="${esc(link)}" target="_blank" rel="noopener">${esc(i.name)}</a>`:esc(i.name)}</h3>
+ ${meta?`<div class="meta">${meta}</div>`:""}
+ ${i.note?`<p class="note">${esc(i.note)}</p>`:""}
+ <textarea class="mine" data-f="mine" placeholder="הערות שלנו…" aria-label="הערות שלנו">${esc(i.mine||"")}</textarea>
+ <div class="acts">${Object.entries(ST).map(([k,n])=>`<button class="st" type="button" data-s="${k}" aria-pressed="${i.status===k}">${n}</button>`).join("")}<button class="mini" type="button" data-edit>עריכה</button></div></article>`}
+
+const status=t=>{$("#status").textContent=t};
+async function save(id,patch){if(!db||!canWrite){status("אין חיבור לשמירה – השינוי לא נשמר.");return}
+ try{await db.doc("items/"+id).update({...patch,updatedAt:new Date().toISOString()});status("נשמר ✓")}
+ catch(e){if(e&&e.code==="invalid_argument"){canWrite=false;status("אין לכם הרשאת עריכה בדף הזה.")}else status("השמירה נכשלה, נסו שוב.")}}
+
+$("#stops").addEventListener("click",e=>{const b=e.target.closest(".stop");if(!b)return;cur=b.dataset.k;location.hash=cur;renderStops();render()});
+window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(DESTS.some(d=>d.k===h)&&h!==cur){cur=h;renderStops();render()}});
+$("#cats").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;cat=b.dataset.c;renderCats();render()});
+$("#q").addEventListener("input",render);$("#stf").addEventListener("change",render);
+$("#grid").addEventListener("click",e=>{const c=e.target.closest(".card");if(!c)return;const id=c.dataset.id;const it=items.find(x=>x.id===id);
+ const s=e.target.closest("[data-s]");if(s){save(id,{status:it.status===s.dataset.s?"":s.dataset.s});return}
+ if(e.target.closest("[data-edit]"))openEd(it)});
+$("#grid").addEventListener("focusout",e=>{const t=e.target;if(!t.matches(".mine"))return;const id=t.closest(".card").dataset.id;const it=items.find(x=>x.id===id);if(it&&(it.mine||"")!==t.value)save(id,{mine:t.value})});
+
+const dlg=$("#dlg"),f=$("#edForm");let editing=null;
+f.dest.innerHTML=[...DESTS.map(d=>`<option value="${d.k}">${d.n}</option>`),'<option value="all">כל הטיול</option>'].join("");
+f.cat.innerHTML=CATS.slice(1).map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
+function openEd(it){editing=it||null;$("#edTitle").textContent=it?"עריכת פריט":"פריט חדש";$("#delBtn").hidden=!it;
+ const v=it||{dest:cur,cat:cat==="all"?"night":cat,tag:"HIGH"};for(const k of["name","dest","cat","tag","score","when","cost","dist","note","link"])f[k].value=v[k]??"";dlg.showModal()}
+$("#addBtn").addEventListener("click",()=>openEd(null));
+f.addEventListener("submit",async e=>{const btn=e.submitter&&e.submitter.value;if(btn!=="save")return;e.preventDefault();
+ const v={};for(const k of["name","dest","cat","tag","when","cost","dist","note","link"])v[k]=f[k].value.trim();v.score=f.score.value?Number(f.score.value):null;
+ dlg.close();if(!db){status("אין חיבור לשמירה.");return}
+ try{if(editing)await save(editing.id,v);else{await db.collection("items").doc().set({...v,status:"",mine:"",order:500,updatedAt:new Date().toISOString()});status("נוסף ✓")}}catch(err){status("השמירה נכשלה.")}});
+$("#delBtn").addEventListener("click",async()=>{if(!editing||!db)return;dlg.close();try{await db.doc("items/"+editing.id).delete();status("נמחק")}catch(e){status("המחיקה נכשלה.")}});
+
+/* chat */
+const drawer=$("#drawer");
+$("#chatBtn").addEventListener("click",()=>{drawer.classList.add("open");$("#chatIn").focus()});
+$("#closeChat").addEventListener("click",()=>drawer.classList.remove("open"));
+function renderChat(){$("#msgs").innerHTML=(chat.length?chat:[{r:"a",t:"היי! אני הסוכן שלכם. שאלו מה עושים עכשיו, ספרו מה עשיתם, או בקשו להוסיף/לעדכן פריטים במאגר – אני מעדכן את הדף בעצמי."}]).map(m=>`<div class="m ${m.r==="u"?"u":"a"}">${esc(m.t)}</div>`).join("");$("#msgs").scrollTop=1e9}
+let sample=null,busy=false;
+const AGENT=`אתה הסוכן האישי של אביב ואופק, שני חברים בני 28 בטיול בתאילנד (25.11–20.12.2026). סגנון: חיי לילה, טכנו ו-EDM, ביץ' קלאבים, איים, אקסטרים, אוכל רחוב ומסעדות טובות, Hidden Gems. לא טיול משפחתי.
+מלונות: פוקט 25.11–1.12 Hotel Clover Patong; קופנגן 1–6.12 Phangan Bayshore Resort (האד רין נוק); קוסמוי 6–12.12 Arkbar Beach Club & Resort (צ'אוונג); פטאיה 12–18.12 Hotel Amber Pattaya (ליד Soi Buakhao); בנגקוק 18–20.12 Novotel Platinum Pratunam.
+כללים: ענה בעברית, ישיר וקצר כמו חבר שמכיר את תאילנד. התחשב במיקום המלון ובשעה. אל תמציא מקומות, מחירים, שעות או אירועים; אין לך גישה לאינטרנט כאן – אם צריך מידע עדכני (מסיבה הערב, תחזית) אמור זאת והצע לבדוק בשיחה הראשית עם Claude. סווג MUST/HIGH/OPTIONAL/HIDDEN GEM/BACKUP ותן התאמה 1–10 כשממליץ. כשמבקשים להוסיף, לסמן או לעדכן פריט – השתמש בכלים. כשמדווחים על הוצאה – סכם בקצרה; מעקב תקציב מלא נעשה בשיחה הראשית עם Claude.`;
+const tools=[
+ {name:"add_item",description:"מוסיף פריט חדש למאגר",inputSchema:{type:"object",properties:{name:{type:"string"},dest:{type:"string",enum:["phuket","phangan","samui","pattaya","bangkok","all"]},cat:{type:"string",enum:CATS.slice(1).map(c=>c[0])},tag:{type:"string",enum:["MUST","HIGH","OPTIONAL","HIDDEN GEM","BACKUP"]},score:{type:"number"},when:{type:"string"},cost:{type:"string"},dist:{type:"string"},note:{type:"string"},link:{type:"string"}},required:["name","dest","cat"]},
+  execute:async a=>{if(!db)throw new Error("no db");const r=db.collection("items").doc();await r.set({tag:"HIGH",when:"",cost:"",dist:"",note:"",link:"",...a,status:"",mine:"",order:500,updatedAt:new Date().toISOString()});return{ok:true,id:r.id}}},
+ {name:"update_item",description:"מעדכן פריט קיים לפי id: status (want/done/skip/''), mine (הערות), note, tag, score, when, cost",inputSchema:{type:"object",properties:{id:{type:"string"},fields:{type:"object"}},required:["id","fields"]},
+  execute:async a=>{if(!db||!items.some(i=>i.id===a.id))throw new Error("unknown id");const ok=["status","mine","note","tag","score","when","cost","dist","link","name"];const p={};for(const k of ok)if(k in a.fields)p[k]=a.fields[k];await db.doc("items/"+a.id).update({...p,updatedAt:new Date().toISOString()});return{ok:true}}}];
+async function persistChat(){if(!db||!canWrite)return;try{await db.doc("chat/log").set({messages:chat.slice(-60),updatedAt:new Date().toISOString()})}catch(e){}}
+$("#chatForm").addEventListener("submit",async e=>{e.preventDefault();const t=$("#chatIn").value.trim();if(!t||busy||!sample)return;busy=true;$("#chatIn").value="";
+ chat=[...chat,{r:"u",t,at:new Date().toISOString()}];renderChat();await persistChat();
+ const lite=items.map(i=>({id:i.id,dest:i.dest,cat:i.cat,name:i.name,tag:i.tag,score:i.score,when:i.when,status:i.status,mine:i.mine}));
+ const hist=chat.slice(-12,-1).map(m=>(m.r==="u"?"משתמש: ":"סוכן: ")+m.t).join("\n");
+ const now=new Intl.DateTimeFormat("he-IL",{timeZone:"Asia/Bangkok",dateStyle:"full",timeStyle:"short"}).format(new Date());
+ const input=`${AGENT}\n\nזמן מקומי בתאילנד: ${now}. היעד שפתוח בדף: ${cur}.\nהמאגר (JSON):\n${JSON.stringify(lite)}\n\nהשיחה עד עכשיו:\n${hist||"(אין)"}\n\nההודעה החדשה: ${t}`;
+ const live={r:"a",t:"חושב…"};chat=[...chat,live];renderChat();
+ try{const res=await sample(input,{cache:false,tools,onText:({text})=>{live.t=text;renderChat()}});live.t=res.text||live.t}
+ catch(err){live.t=err&&err.code==="rate_limited"?"יותר מדי בקשות, נסו בעוד דקה.":err&&err.code==="not_granted"?"הצ'אט לא אושר בדף הזה.":"משהו נכשל, נסו שוב."}
+ live.at=new Date().toISOString();chat=[...chat];renderChat();await persistChat();busy=false});
+
+renderStops();renderCats();render();renderChat();
+(async()=>{
+ const timer=setTimeout(()=>status("לא הצלחתי להגיע למאגר עדיין – בדקו חיבור."),10000);
+ db=await claude.use("db");
+ if(!db){clearTimeout(timer);status("פתחו את הדף ב-claude.ai (מחוברים) כדי לראות ולערוך את המאגר.");return}
+ const user=await claude.use("user");
+ if(user&&user.can){try{const w=await user.can("data.write");if(w===false){canWrite=false}}catch(e){}}
+ db.collection("items").onSnapshot(s=>{items=s.docs.map(d=>({id:d.id,...d.data()}));if(!s.metadata.fromCache){clearTimeout(timer);status(canWrite?"מסונכרן · כל שינוי נשמר ונראה לסוכן":"מצב צפייה בלבד")}render()},e=>{clearTimeout(timer);status("החיבור למאגר נפל – רעננו את הדף.")});
+ db.doc("chat/log").onSnapshot(s=>{if(busy)return;chat=(s.exists&&s.data().messages)||[];renderChat()},()=>{});
+ sample=await claude.use("sample");if(sample)$("#chatBtn").hidden=false;
+})();
+}
+</script>
+</body>
+</html>

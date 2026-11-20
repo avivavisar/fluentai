@@ -1,0 +1,15 @@
+{
+  "cat": "move",
+  "cost": "מעבורת $8–52",
+  "dest": "phangan",
+  "dist": "~30 דק' מעבורת + ~30 דק' נסיעה",
+  "link": "https://www.directferries.com/koh_phangan_thong_sala_pier_koh_samui_mae_nam_pier_ferry.htm",
+  "mine": "",
+  "name": "פוקט → סמוי → קופנגן",
+  "note": "יש ספידבוט ישיר להאד רין (Haad Rin Queen) – חוסך נסיעה באי.",
+  "order": 1,
+  "score": null,
+  "status": "",
+  "tag": "HIGH",
+  "when": "1.12"
+}

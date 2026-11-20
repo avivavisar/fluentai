@@ -1,0 +1,15 @@
+{
+  "cat": "food",
+  "cost": "זול",
+  "dest": "phuket",
+  "dist": "~30 דק'",
+  "link": "https://www.google.com/maps/search/?api=1&query=Phuket+Old+Town",
+  "mine": "",
+  "name": "פוקט טאון העתיקה",
+  "note": "אוכל מקומי אמיתי וברים קטנים, הפוך מפטונג.",
+  "order": 40,
+  "score": 8,
+  "status": "",
+  "tag": "HIDDEN GEM",
+  "when": "ערב"
+}

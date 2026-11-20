@@ -1,0 +1,15 @@
+{
+  "cat": "food",
+  "cost": "זול",
+  "dest": "phangan",
+  "dist": "~30 דק'",
+  "link": "https://www.google.com/maps/search/?api=1&query=Thong+Sala+Night+Market",
+  "mine": "",
+  "name": "שוק הלילה בתונג סאלה",
+  "note": "אוכל רחוב – גם ליום גשום.",
+  "order": 40,
+  "score": 7,
+  "status": "",
+  "tag": "BACKUP",
+  "when": "ערב"
+}
