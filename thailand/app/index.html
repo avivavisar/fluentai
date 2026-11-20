@@ -63,7 +63,7 @@ bdi{unicode-bidi:isolate}
 .wrap{padding-inline-start:var(--gutR);padding-inline-end:var(--gut);max-width:1180px;margin-inline:auto}
 
 /* ---------- shell ---------- */
-.app{min-height:100vh;padding-bottom:calc(var(--nav-h) + 28px + env(safe-area-inset-bottom,0px))}
+.app{min-height:100vh;padding-bottom:calc(var(--nav-h) + 36px + env(safe-area-inset-bottom,0px))}
 .topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:border-color .3s}
 .topbar.scrolled{border-bottom-color:var(--line)}
 .topbar .wrap{display:flex;align-items:center;gap:12px;height:56px}
@@ -74,26 +74,26 @@ bdi{unicode-bidi:isolate}
 .sync{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-3);white-space:nowrap}
 .sync i{width:7px;height:7px;border-radius:50%;background:var(--stone)}
 .sync.live i{background:var(--ok)} .sync.err i{background:var(--accent)}
+.sync:not(.err) span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.topbar .iconbtn{width:40px;height:40px}
 .iconbtn{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;color:var(--ink)}
 .iconbtn:hover{background:var(--paper-2)}
 .iconbtn svg{width:22px;height:22px}
 
 .nav{position:fixed;inset:auto 0 0 0;z-index:35;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:0 var(--gut) env(safe-area-inset-bottom,0px) var(--gutR)}
-.nav ul{list-style:none;margin:0 auto;padding:0;display:grid;grid-template-columns:repeat(5,1fr);max-width:560px;height:var(--nav-h)}
+.nav ul{list-style:none;margin:0 auto;padding:0;display:grid;grid-template-columns:repeat(5,1fr) 1.15fr;max-width:600px;height:var(--nav-h);align-items:center}
+.nav .navbrand{display:none}
+.nav-cc{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;font-weight:500;color:var(--ink);width:100%;height:100%;justify-content:center}
+.nav-cc .orb{width:40px;height:40px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;margin-top:-2px;transition:transform .3s var(--ease)}
+.nav-cc .orb svg{width:19px;height:19px}
+.nav-cc:active .orb{transform:scale(.9)}
+.nav-cc .lb{font-size:11.5px;margin-top:-1px}
+.cc-li{border-inline-start:1px solid var(--line);height:44px;display:flex}
 .nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:var(--ink-3);font-size:12px;font-weight:500;height:100%;position:relative}
 .nav a svg{width:23px;height:23px;transition:transform .3s var(--ease)}
 .nav a[aria-current="page"]{color:var(--ink)}
 .nav a[aria-current="page"]::before{content:"";position:absolute;top:0;width:22px;height:2px;background:var(--ink);border-radius:2px}
 .nav a:active svg{transform:scale(.88)}
-
-.dock{position:fixed;z-index:34;inset-inline-end:max(16px,env(safe-area-inset-left,0px));bottom:calc(var(--nav-h) + 14px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;align-items:center}
-.fab-add{width:52px;height:52px;border-radius:50%;background:var(--raise);color:var(--ink);box-shadow:var(--shadow);display:grid;place-items:center;border:1px solid var(--line)}
-.fab-add svg{width:22px;height:22px}
-.fab-ask{height:52px;border-radius:26px;background:var(--ink);color:var(--paper);box-shadow:var(--shadow);display:flex;align-items:center;gap:9px;padding:0 20px 0 18px;font-weight:500;transition:padding .35s var(--ease)}
-.fab-ask .seal{width:22px;height:22px}
-.fab-ask span{transition:opacity .25s,max-width .35s var(--ease);max-width:120px;overflow:hidden;white-space:nowrap}
-.dock.compact .fab-ask{padding:0 15px}
-.dock.compact .fab-ask span{opacity:0;max-width:0}
 
 main{display:block}
 .view{animation:viewIn .5s var(--ease) both}
@@ -105,22 +105,23 @@ main{display:block}
 .plate .cap{position:absolute;inset-block-end:10px;inset-inline-start:12px;font:400 11px/1 var(--f-mono);color:rgba(255,255,255,.82);direction:ltr;letter-spacing:.04em}
 
 /* ---------- TODAY ---------- */
-.mast{padding-block:14px 0}
-.mast .line1{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--ink);padding-bottom:8px}
-.mast .line1 .ed{font:600 13px/1 var(--f-sans);letter-spacing:.03em}
-.mast .line1 .dt{font:400 13px/1 var(--f-sans);color:var(--ink-2)}
-.hero{position:relative;margin-top:14px}
-.hero .plate{aspect-ratio:4/5;max-height:62vh;width:100%;border-radius:2px}
-.hero .over{position:absolute;inset:auto 0 0 0;padding:18px 18px 16px;color:#FBF6EC;background:linear-gradient(to top,rgba(10,12,9,.62),rgba(10,12,9,0));}
-.hero .chap{font:500 13px/1 var(--f-sans);opacity:.9;display:flex;gap:10px;align-items:center}
-.hero .chap .thai{font-size:15px;opacity:.85}
-.hero h1{font:700 clamp(84px,25vw,190px)/.78 var(--f-display);letter-spacing:-.01em;margin-top:10px}
-.hero .sub{font:400 15px/1.45 var(--f-serif);max-width:34ch;margin-top:8px;opacity:.95}
-.hero .stamp{position:absolute;top:14px;inset-inline-end:14px;background:var(--paper);color:var(--ink);padding:9px 12px 8px;text-align:center;border-radius:2px;box-shadow:0 6px 20px -8px rgba(0,0,0,.35)}
-.hero .stamp b{display:block;font:700 40px/.85 var(--f-display)}
-.hero .stamp span{font-size:11.5px;color:var(--ink-2);white-space:nowrap}
-
-.progress{margin-top:22px}
+.cover{position:relative;margin-inline:calc(-1*var(--gutR)) calc(-1*var(--gut));color:#FBF6EC;overflow:hidden}
+.cover .plate{height:min(76vh,640px);min-height:440px;width:100%;animation:coverIn 1.4s var(--ease) both}
+@keyframes coverIn{from{transform:scale(1.06);filter:saturate(.6)}to{transform:none;filter:none}}
+.cover::before,.cover::after{content:"";position:absolute;inset-inline:0;pointer-events:none;z-index:1}
+.cover::before{top:0;height:30%;background:linear-gradient(rgba(10,12,9,.5),rgba(10,12,9,0))}
+.cover::after{bottom:0;height:58%;background:linear-gradient(to top,rgba(10,12,9,.78),rgba(10,12,9,.25) 60%,rgba(10,12,9,0))}
+.cv-top{position:absolute;z-index:2;top:14px;inset-inline:var(--gutR) var(--gut);display:flex;justify-content:space-between;gap:10px;font:500 12.5px/1.2 var(--f-sans);letter-spacing:.02em;padding-bottom:8px;border-bottom:1px solid rgba(251,246,236,.45)}
+.cv-num{position:absolute;z-index:2;top:46px;inset-inline-end:var(--gut);display:flex;align-items:flex-start;gap:6px;text-align:end}
+.cv-num b{font:300 88px/.8 var(--f-display)}
+.cv-num span{font:400 12.5px/1.25 var(--f-sans);opacity:.85;padding-top:6px}
+.cv-bot{position:absolute;z-index:2;inset-inline:var(--gutR) var(--gut);bottom:20px}
+.cover .chap{font:500 13px/1 var(--f-sans);display:flex;gap:10px;align-items:baseline;opacity:.92}
+.cover .chap .thai{font-size:15px}
+.cover h1{font:700 clamp(96px,30vw,210px)/.76 var(--f-display);margin-top:10px;letter-spacing:-.005em}
+.cover .sub{font:400 17px/1.45 var(--f-serif);max-width:32ch;margin-top:10px}
+.cover .geo{display:block;font-size:11px;opacity:.6;margin-top:12px;direction:ltr;text-align:end;letter-spacing:.05em}
+.progress{margin-top:18px}
 .progress .route{display:flex;gap:3px;align-items:flex-end;height:30px}
 .progress .seg{display:flex;gap:2px;flex:var(--d) 1 0;flex-direction:column}
 .progress .ticks{display:flex;gap:2px;height:8px}
@@ -130,9 +131,13 @@ main{display:block}
 @keyframes pulse{50%{opacity:.45}}
 .progress .seg small{font-size:11.5px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .progress .seg.cur small{color:var(--ink);font-weight:600}
-.progress .facts{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;font-size:14px;color:var(--ink-2)}
-.progress .facts b{font:700 24px/1 var(--f-display);color:var(--ink);margin-inline-end:4px;font-weight:700}
-
+.story{font:400 18px/1.55 var(--f-serif);color:var(--ink-2);margin-top:12px;max-width:44ch}
+.story .num{font:500 19px/1 var(--f-serif);color:var(--ink);font-variant-numeric:lining-nums}
+.nextup{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-size:16px;margin-bottom:4px}
+.asks{display:flex;gap:4px 18px;flex-wrap:wrap;margin-top:6px}
+.brief{list-style:none;margin:0;padding:0}
+.brief li{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:start;padding-block:12px;border-top:1px solid var(--line)}
+.brief .sc{font-size:14px;color:var(--ink-3);padding-top:3px}
 .sec{margin-top:34px}
 .sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
 .sec-h h2{font:700 34px/.95 var(--f-display)}
@@ -141,12 +146,6 @@ main{display:block}
 .lede{font:400 17px/1.55 var(--f-serif);color:var(--ink-2);max-width:60ch}
 
 .twocol{display:grid;gap:34px}
-.quick{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-block:2px;margin-inline:calc(-1*var(--gutR)) calc(-1*var(--gut));padding-inline:var(--gutR) var(--gut)}
-.quick::-webkit-scrollbar{display:none}
-.qa{flex:none;display:flex;align-items:center;gap:8px;border:1px solid var(--line-2);border-radius:999px;padding:0 15px;height:42px;font-size:14.5px;white-space:nowrap;background:transparent;transition:background .2s,border-color .2s}
-.qa:hover{background:var(--paper-2)}
-.qa svg{width:17px;height:17px;color:var(--ink-2)}
-
 .next{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;text-decoration:none;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-block:14px}
 .next .plate{aspect-ratio:1;border-radius:50%}
 .next h3{font:700 36px/.9 var(--f-display)}
@@ -180,7 +179,8 @@ main{display:block}
 .ev .n{font:500 17px/1.3 var(--f-sans);margin-top:1px}
 .ev .m{font-size:13.5px;color:var(--ink-3);margin-top:3px}
 .ev .side{display:flex;flex-direction:column;align-items:center;gap:4px}
-.ev.major .n{font:700 30px/.95 var(--f-display);letter-spacing:.005em}
+.ev.major .n{font:500 23px/1.2 var(--f-serif)}
+.ev .kl{font-weight:600;color:var(--ink-2)}
 .ev.major::before{background:var(--ink);border-color:var(--ink);width:11px;height:11px;inset-inline-start:53px;top:17px}
 .ev.meal .n::before{content:"";display:inline-block;width:14px;height:14px;margin-inline-end:7px;vertical-align:-1px;background:currentColor;opacity:.55;-webkit-mask:var(--i-fork) center/contain no-repeat;mask:var(--i-fork) center/contain no-repeat}
 .ev.transport{padding-block:16px}
@@ -250,16 +250,15 @@ main{display:block}
 .day[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
 .day[aria-pressed="true"] .d{color:var(--paper)}
 .day[aria-pressed="true"] .dots i{background:var(--paper)}
-.dayhead{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:end;padding-block:24px 8px}
-.dayhead .num{font:300 112px/.72 var(--f-display);grid-row:span 2;padding-inline-end:4px}
-.dayhead .num small{font:500 13px/1 var(--f-sans);display:block;color:var(--ink-3);margin-bottom:6px}
-.dayhead h2{font:500 21px/1.2 var(--f-serif)}
-.dayhead p{font-size:14px;color:var(--ink-2)}
+.dayhead{padding-block:22px 10px}
+.dayhead h2{font:700 clamp(46px,13vw,76px)/.86 var(--f-display);margin-top:8px}
+.dayhead p{font-size:14px;color:var(--ink-2);margin-top:8px}
+.live{color:var(--accent);font-weight:600}
 .dayacts{display:flex;gap:6px 10px;flex-wrap:wrap;align-items:center;padding-block:6px 4px;border-bottom:1px solid var(--line);margin-bottom:6px}
 .dayacts .sp{flex:1}
 .tray{margin-top:30px}
 .tray h3{font:700 26px/1 var(--f-display)}
-.tray .row{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding-block:12px;margin-inline:calc(-1*var(--gutR)) calc(-1*var(--gut));padding-inline:var(--gutR) var(--gut);scroll-snap-type:x mandatory}
+.tray .row{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;scroll-padding-inline:var(--gutR) var(--gut);padding-block:12px;margin-inline:calc(-1*var(--gutR)) calc(-1*var(--gut));padding-inline:var(--gutR) var(--gut);scroll-snap-type:x mandatory}
 .tray .row::-webkit-scrollbar{display:none}
 .slip{flex:none;width:210px;border-top:2px solid var(--ink);padding-top:10px;scroll-snap-align:start;display:flex;flex-direction:column;gap:6px}
 .slip .n{font-weight:500;line-height:1.3;cursor:pointer}
@@ -301,7 +300,10 @@ main{display:block}
 .hotel dd{margin:0;font:700 26px/1 var(--f-display)}
 .hotel .acts{display:flex;gap:8px 16px;flex-wrap:wrap;align-items:center}
 
-.daychips{display:flex;gap:6px;flex-wrap:wrap}
+.daystrip{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-block:4px}
+.daystrip::-webkit-scrollbar{display:none}
+.daystrip .day{text-decoration:none}
+.daystrip .day:hover{background:var(--paper-2)}
 .daychip{border:1px solid var(--line-2);border-radius:3px;padding:6px 10px 5px;text-align:center;text-decoration:none;min-width:58px}
 .daychip b{display:block;font:700 22px/.9 var(--f-display)}
 .daychip small{font-size:11.5px;color:var(--ink-3)}
@@ -325,7 +327,7 @@ main{display:block}
 .gsec>.intro{font-size:14px;color:var(--ink-2);margin-top:4px}
 /* ranked list (nightlife/events) */
 .ranked{list-style:none;margin:10px 0 0;padding:0}
-.ranked li{display:grid;grid-template-columns:52px 1fr auto;gap:12px;padding-block:14px;border-top:1px solid var(--line);align-items:start}
+.ranked li{display:grid;grid-template-columns:44px 1fr auto;gap:12px;padding-block:16px;border-top:1px solid var(--line);align-items:start}
 .ranked .sc{font:700 46px/.8 var(--f-display);color:var(--ink);text-align:center}
 .ranked .sc small{display:block;font:400 11px/1.2 var(--f-sans);color:var(--ink-3)}
 .ranked .sc.na{color:var(--stone);font-size:32px}
@@ -341,10 +343,11 @@ main{display:block}
 .li-done .it-n{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--line-2)}
 .li-skip{opacity:.5}
 /* postcards (sea / extreme) */
-.cards-h{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;padding-block:12px;margin-inline:calc(-1*var(--gutR)) calc(-1*var(--gut));padding-inline:var(--gutR) var(--gut);scroll-snap-type:x mandatory}
+.cards-h{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;scroll-padding-inline:var(--gutR) var(--gut);padding-block:12px;margin-inline:calc(-1*var(--gutR)) calc(-1*var(--gut));padding-inline:var(--gutR) var(--gut);scroll-snap-type:x mandatory}
 .cards-h::-webkit-scrollbar{display:none}
-.pc{flex:none;width:min(76vw,300px);scroll-snap-align:start;cursor:pointer}
-.pc .plate{aspect-ratio:4/5;border-radius:2px}
+.pc{flex:none;width:min(72vw,280px);scroll-snap-align:start;cursor:pointer}
+.pc .plate{aspect-ratio:5/4;border-radius:2px;transition:transform .5s var(--ease)}
+.pc:hover .plate{transform:scale(1.02)}
 .pc .n{font:700 28px/.95 var(--f-display);margin-top:10px}
 .pc .m{font-size:13px;color:var(--ink-3);margin-top:3px}
 /* menu (food) */
@@ -358,7 +361,7 @@ main{display:block}
 .routes{list-style:none;margin:10px 0 0;padding:0}
 .routes li{padding-block:14px;border-top:1px solid var(--line)}
 .routes .path{display:flex;align-items:center;gap:8px;font:700 26px/1 var(--f-display);flex-wrap:wrap}
-.routes .path svg{width:20px;height:20px;color:var(--ink-3);transform:scaleX(-1)}
+.routes .path svg{width:20px;height:20px;color:var(--ink-3)}
 /* tickets (book) */
 .tickets{display:grid;gap:10px;margin-top:10px}
 .ticket{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;background:var(--raise);border:1px solid var(--line);padding:14px 16px;border-radius:3px;position:relative}
@@ -401,8 +404,8 @@ main{display:block}
 .mapzoom{position:absolute;inset-inline-start:12px;bottom:16px;display:flex;flex-direction:column;gap:6px;z-index:2}
 .mapzoom button{width:42px;height:42px;border-radius:50%;background:var(--paper);box-shadow:0 2px 10px -4px rgba(0,0,0,.3);display:grid;place-items:center}
 .mapzoom svg{width:18px;height:18px}
-.mapnote{position:absolute;inset-inline-end:12px;bottom:80px;z-index:2;font-size:12px;color:var(--ink-2);background:color-mix(in srgb,var(--paper) 85%,transparent);padding:5px 10px;border-radius:999px;max-width:60%}
-.mapask{position:absolute;inset-inline-end:12px;bottom:114px;z-index:2}
+.mapnote{position:absolute;inset-inline-end:12px;bottom:16px;z-index:2;font-size:12px;color:var(--ink-2);background:color-mix(in srgb,var(--paper) 85%,transparent);padding:5px 10px;border-radius:999px;max-width:60%}
+.mapask{position:absolute;inset-inline-end:12px;bottom:50px;z-index:2}
 .mapask .btn{box-shadow:0 4px 16px -6px rgba(0,0,0,.35)}
 .attrib{position:absolute;inset-inline-start:62px;bottom:6px;font-size:10px;color:var(--ink-3);direction:ltr;z-index:2}
 
@@ -483,7 +486,7 @@ form.ed legend{font:700 22px/1 var(--f-display);padding:0;margin-bottom:6px}
 .qgrid small{font-size:13px;color:var(--ink-3)}
 .qgrid svg{width:22px;height:22px;color:var(--ink-2)}
 
-.toast{position:fixed;z-index:80;inset-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));bottom:calc(var(--nav-h) + 80px + env(safe-area-inset-bottom,0px));margin-inline:auto;max-width:440px;background:var(--ink);color:var(--paper);border-radius:999px;padding:8px 8px 8px 20px;padding-inline-start:20px;display:flex;align-items:center;gap:12px;font-size:14.5px;box-shadow:var(--shadow);transform:translateY(20px);opacity:0;transition:all .35s var(--ease);pointer-events:none}
+.toast{position:fixed;z-index:80;inset-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));bottom:calc(var(--nav-h) + 14px + env(safe-area-inset-bottom,0px));margin-inline:auto;max-width:440px;background:var(--ink);color:var(--paper);border-radius:999px;padding:8px 8px 8px 20px;padding-inline-start:20px;display:flex;align-items:center;gap:12px;font-size:14.5px;box-shadow:var(--shadow);transform:translateY(20px);opacity:0;transition:all .35s var(--ease);pointer-events:none}
 .toast.on{transform:none;opacity:1;pointer-events:auto}
 .toast span{flex:1}
 .toast button{color:var(--paper);font-weight:600;padding:0 12px;min-height:36px;border-radius:999px;background:rgba(255,255,255,.12)}
@@ -534,11 +537,15 @@ form.ed legend{font:700 22px/1 var(--f-display);padding:0;margin-bottom:6px}
 /* ---------- desktop ---------- */
 @media (min-width:760px){
   .twocol{grid-template-columns:1.25fr 1fr;align-items:start}
-  .hero{display:grid;grid-template-columns:1.1fr 1fr;gap:0;align-items:stretch;background:var(--ink);color:var(--paper)}
-  .hero .plate{aspect-ratio:auto;height:100%;min-height:440px;max-height:none}
-  .hero .over{position:static;background:none;color:var(--paper);display:flex;flex-direction:column;justify-content:flex-end;padding:28px}
-  .hero h1{font-size:clamp(110px,13vw,190px)}
-  .hero .stamp{inset-inline-end:auto;inset-inline-start:14px}
+  .cover .plate{height:min(70vh,600px)}
+  .cv-top,.cv-bot{inset-inline:36px}
+  .cv-num{inset-inline-end:36px;top:52px}
+  .cv-num b{font-size:120px}
+  .plangrid{display:grid;grid-template-columns:1.5fr 1fr;gap:48px;align-items:start}
+  .plangrid .tray{margin-top:0;position:sticky;top:150px}
+  .plangrid .tray .row{flex-direction:column;overflow:visible;margin:0;padding:0;gap:0}
+  .plangrid .slip{width:auto;border-top:1px solid var(--line);padding-block:12px;display:grid;grid-template-columns:1fr auto;gap:4px 12px}
+  .plangrid .slip .btn{grid-row:1/span 3;grid-column:2;align-self:center;margin:0}
   .chrow{grid-template-columns:1fr 30%}
   .chrow:nth-child(even){grid-template-columns:30% 1fr}
   .chhero .plate{aspect-ratio:21/9;max-height:none}
@@ -566,8 +573,17 @@ form.ed legend{font:700 22px/1 var(--f-display);padding:0;margin-bottom:6px}
   .nav a[aria-current="page"]{background:var(--paper-2)}
   .nav a[aria-current="page"]::before{display:none}
   .nav .navfoot{display:block}
+  .nav .navbrand{display:block;height:auto;text-decoration:none;margin:-60px 12px 34px;padding:0;color:var(--ink)}
+  .navbrand b{display:block;font:700 30px/.9 var(--f-display)}
+  .navbrand span{font-size:12px;color:var(--ink-3)}
+  .topbar .brand{visibility:hidden}
+  .cc-li{border:0;height:auto;margin-top:18px}
+  .nav-cc{flex-direction:row;justify-content:flex-start;gap:12px;font-size:15.5px;height:50px;padding:0 6px;border-radius:4px}
+  .nav-cc .orb{width:36px;height:36px;margin:0}
+  .nav-cc .lb{font-size:15.5px}
+  .nav-cc:hover{background:var(--paper-2)}
+  .cover{margin-inline:0}
   .topbar .wrap{max-width:1180px}
-  .dock{bottom:24px}
   .mapwrap{height:calc(100vh - 56px - 24px);margin-inline:0;border-radius:3px}
   .chhero{margin-inline:0}
   .cards-h,.tray .row,.quick,.filters{margin-inline:0;padding-inline:0}
@@ -620,24 +636,23 @@ form.ed legend{font:700 22px/1 var(--f-display);padding:0;margin-bottom:6px}
       <a class="brand" href="#today" aria-label="המהדורה הפרטית – לדף היום"><b>המהדורה הפרטית</b><span>תאילנד 2026</span></a>
       <span class="sp"></span>
       <span class="sync" id="sync" role="status"><i></i><span>מתחבר…</span></span>
+      <button class="iconbtn" type="button" data-act="quickadd" aria-label="הוספה מהירה"><svg><use href="#i-plus"/></svg></button>
       <button class="iconbtn" type="button" data-act="settings" aria-label="הגדרות ומידע"><svg><use href="#i-gear"/></svg></button>
     </div>
   </header>
   <main id="main" class="wrap" tabindex="-1"></main>
   <nav class="nav" aria-label="ניווט ראשי">
+    <a class="navbrand" href="#today"><b>המהדורה הפרטית</b><span>תאילנד 2026 · אביב ואופק</span></a>
     <ul>
       <li><a href="#today" data-nav="today"><svg><use href="#i-sun"/></svg>היום</a></li>
       <li><a href="#plan" data-nav="plan"><svg><use href="#i-route"/></svg>המסלול</a></li>
       <li><a href="#chapters" data-nav="chapters"><svg><use href="#i-book"/></svg>היעדים</a></li>
       <li><a href="#map" data-nav="map"><svg><use href="#i-map"/></svg>מפה</a></li>
       <li><a href="#journal" data-nav="journal"><svg><use href="#i-journal"/></svg>יומן</a></li>
+      <li class="cc-li"><button class="nav-cc" type="button" data-act="concierge" id="askBtn" aria-label="הקונסיירז'"><span class="orb"><svg><use href="#i-seal"/></svg></span><span class="lb">קונסיירז'</span></button></li>
     </ul>
     <div class="navfoot">אביב ואופק · 25.11–20.12<br><span class="thai">ประเทศไทย</span></div>
   </nav>
-  <div class="dock" id="dock">
-    <button class="fab-add" type="button" data-act="quickadd" aria-label="הוספה מהירה"><svg><use href="#i-plus"/></svg></button>
-    <button class="fab-ask" type="button" data-act="concierge" id="askBtn" hidden><svg class="seal"><use href="#i-seal"/></svg><span>הקונסיירז'</span></button>
-  </div>
 </div>
 
 <div class="scrim" id="scrim" hidden></div>
@@ -704,7 +719,7 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const safeUrl=u=>/^https:\/\//.test(u||"")?u:"";
 const ico=(id,cls="")=>`<svg class="${cls}" aria-hidden="true"><use href="#${id}"/></svg>`;
-const bdi=s=>`<bdi>${esc(s)}</bdi>`;
+const bdi=s=>`<bdi dir="rtl">${esc(s)}</bdi>`; // Hebrew-first content: RTL base, English words isolated inside it
 const store={get(k,d){try{const v=localStorage.getItem("pte:"+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("pte:"+k,JSON.stringify(v))}catch(e){}}};
 const addDays=(iso,n)=>{const d=new Date(iso+"T12:00:00Z");d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)};
 const diffDays=(a,b)=>Math.round((new Date(b+"T12:00:00Z")-new Date(a+"T12:00:00Z"))/864e5);
@@ -740,12 +755,13 @@ let synced=false,connErr="";
    ========================================================= */
 const PLATE_CACHE=new Map();
 function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-function plate(k,w,h){
+function plate(k,w,h,v=0){
   const dpr=Math.min(2,window.devicePixelRatio||1);w=Math.max(80,Math.round(w/40)*40);h=Math.max(80,Math.round(h/40)*40);
-  const key=k+w+"x"+h+dpr;if(PLATE_CACHE.has(key))return PLATE_CACHE.get(key);
+  const key=k+w+"x"+h+dpr+"v"+v;if(PLATE_CACHE.has(key))return PLATE_CACHE.get(key);
   const c=document.createElement("canvas");c.width=w*dpr;c.height=h*dpr;const x=c.getContext("2d");x.scale(dpr,dpr);
   const R=rng([...k].reduce((a,ch)=>a*31+ch.charCodeAt(0),7));
-  (PAINT[k]||PAINT.phuket)(x,w,h,R);
+  if(v){const V=rng(v*7919);const sc=1.35+V()*.55;x.translate(-V()*(w*sc-w),-(.15+V()*.5)*(h*sc-h));if(V()<.5){x.translate(w*sc,0);x.scale(-1,1);x.translate(-(w*sc-w)*0,0)}(PAINT[k]||PAINT.phuket)(x,w*sc,h*sc,rng(v));x.setTransform(dpr,0,0,dpr,0,0)}
+  else (PAINT[k]||PAINT.phuket)(x,w,h,R);
   grain(x,w,h,R);
   const url=c.toDataURL("image/jpeg",.86);PLATE_CACHE.set(key,url);return url}
 function grad(x,y0,y1,stops){const g=x.createLinearGradient(0,y0,0,y1);stops.forEach(([o,c])=>g.addColorStop(o,c));return g}
@@ -864,9 +880,9 @@ function render(nav){
   if(route==="plan")centerDay();
   if(nav){window.scrollTo(0,scrollMem[route]||0)}
 }
-function paintPlates(){document.querySelectorAll("[data-plate]").forEach(el=>{const r=el.getBoundingClientRect();if(!r.width)return;el.style.backgroundImage=`url(${plate(el.dataset.plate,r.width,r.height)})`})}
+function paintPlates(){document.querySelectorAll("[data-plate]").forEach(el=>{const r=el.getBoundingClientRect();if(!r.width)return;el.style.backgroundImage=`url(${plate(el.dataset.plate,r.width,r.height,+el.dataset.v||0)})`})}
 let rsT;window.addEventListener("resize",()=>{clearTimeout(rsT);rsT=setTimeout(()=>{paintPlates();if(route==="map")fitMap(false)},200)});
-window.addEventListener("scroll",()=>{$("#topbar").classList.toggle("scrolled",scrollY>4);$("#dock").classList.toggle("compact",scrollY>120)},{passive:true});
+window.addEventListener("scroll",()=>{$("#topbar").classList.toggle("scrolled",scrollY>4)},{passive:true});
 
 /* ---------- shared fragments ---------- */
 const tagHtml=i=>i.tag?`<span class="tag ${tagK(i.tag)}">${tagL(i.tag)}</span>`:"";
@@ -885,9 +901,12 @@ function progressHtml(){
   const open=items.filter(i=>!i.status&&!["warn","move","book"].includes(i.cat)).length;
   const segs=STOPS.map(s=>{const ds=DAYS.filter(d=>stopOf(d)===s);const cur=stopOf(t)===s;
     return `<div class="seg ${cur?"cur":""}" style="--d:${ds.length}"><div class="ticks">${ds.map(d=>`<i class="${d<t?"past":d===t?"now":""}" title="${fShort(d)}"></i>`).join("")}</div><small>${s.n}</small></div>`}).join("");
-  const lead=pre?`<span><b>${diffDays(t,TRIP.s)}</b>ימים להמראה</span>`:post?`<span><b>${DAYS.length}</b>ימים מאחוריכם</span>`:`<span><b>${idx+1}</b>מתוך ${DAYS.length} ימים</span><span><b>${DAYS.length-idx-1}</b>נשארו</span>`;
-  return `<section class="progress" aria-label="התקדמות הטיול"><div class="route">${segs}</div>
-   <div class="facts">${lead}<span><b>${done}</b>חוויות מאחוריכם</span><span><b>${planned}</b>בתוכנית</span><span><b>${open}</b>עוד לא הוחלט</span></div></section>`}
+  const S=stopOf(t);const prep=items.filter(i=>(i.cat==="book")&&i.status!=="done").length;
+  const n=x=>`<b class="num">${x}</b>`;
+  const story=pre?`${n(diffDays(t,TRIP.s))} ימים לנחיתה בפוקט. ${prep?`${n(prep)} דברים עוד מחכים להזמנה, `:""}${n(planned)} כבר בתוכנית, ${n(open)} עוד פתוחים.`
+   :post?`${n(DAYS.length)} ימים, ${n(done)} חוויות. הכול ביומן.`
+   :`לילה ${n(diffDays(S.s,t)+1)} מתוך ${diffDays(S.s,S.e)} ב${S.n}. ${done?`${n(done)} חוויות מאחוריכם, `:""}${n(planned)} בתוכנית, ${n(open)} עוד פתוחים.`;
+  return `<section class="progress" aria-label="התקדמות הטיול"><div class="route">${segs}</div><p class="story">${story}</p></section>`}
 
 /* =========================================================
    7. VIEW: TODAY
@@ -895,11 +914,12 @@ function progressHtml(){
 function vToday(){
   const t=today(),pre=t<TRIP.s,post=t>TRIP.e;const S=pre?STOPS[0]:post?STOPS[4]:stopOf(t);
   const nT=nowBKK();const dn=dayNo(t);
-  const stampHtml=pre?`<div class="stamp"><b>${diffDays(t,TRIP.s)}</b><span>ימים להמראה</span></div>`:post?"":`<div class="stamp"><b>${dn}</b><span>יום מתוך 26</span></div>`;
-  const hero=`<section class="hero"><div class="plate" data-plate="${S.k}" role="img" aria-label="איור: ${S.n}"><span class="cap">${S.en.toUpperCase()} · ${S.hotel.lat.toFixed(2)}°N ${S.hotel.lng.toFixed(2)}°E</span></div>
-    <div class="over"><div class="chap"><span>${pre?"הפרק הראשון":S.no}</span><span class="thai" lang="th">${S.th}</span></div>
-    <h1>${S.n}</h1><p class="sub">${esc(S.line)}</p></div>${stampHtml}</section>`;
-  const mast=`<div class="mast"><div class="line1"><span class="ed">${pre?"גיליון טרום־טיסה":post?"גיליון סיום":"גיליון יומי · "+S.ch}</span><span class="dt">${fDay(t)}</span></div></div>`;
+  const big=pre?`<b>${diffDays(t,TRIP.s)}</b><span>ימים<br>להמראה</span>`:post?"":`<b>${dn}</b><span>יום<br>מתוך ${DAYS.length}</span>`;
+  const hero=`<section class="cover"><div class="plate" data-plate="${S.k}" role="img" aria-label="איור: ${S.n}"></div>
+    <div class="cv-top"><span>${pre?"גיליון טרום־טיסה":post?"גיליון סיום":"גיליון "+dn}</span><span>${fDay(t)}</span></div>
+    ${big?`<div class="cv-num">${big}</div>`:""}
+    <div class="cv-bot"><div class="chap"><span>${pre?"הפרק הראשון":S.no}</span><span class="thai" lang="th" dir="ltr">${S.th}</span></div>
+    <h1>${S.n}</h1><p class="sub">${esc(S.line)}</p><span class="geo mono">${S.hotel.lat.toFixed(2)}°N ${S.hotel.lng.toFixed(2)}°E</span></div></section>`;
   let main="";
   if(pre){
     const prep=items.filter(i=>(i.cat==="book"||i.cat==="warn")).sort((a,b)=>(a.status==="done")-(b.status==="done")||(tagRank[a.tag]??5)-(tagRank[b.tag]??5));
@@ -913,21 +933,15 @@ function vToday(){
     const di=dayItems(t);const upcoming=di.find(i=>i.time&&i.time>=nT.time&&i.status!=="done");
     const tonight=itemsOf(S.k).filter(i=>i.cat==="night"&&i.status!=="done"&&i.status!=="skip").sort((a,b)=>(b.score||0)-(a.score||0)).slice(0,3);
     main=`<section class="sec"><div class="sec-h"><h2>היום</h2><a class="more" href="#plan" data-act="gotoday" data-day="${t}">כל היום במסלול</a></div>
-      ${upcoming?`<p class="lede" style="margin-bottom:6px">הבא בתור: ${bdi(upcoming.name)} ב־<span class="mono">${esc(upcoming.time)}</span></p>`:""}
-      ${dayTimeline(t,{compact:true})}</section>
-      ${tonight.length?`<section class="sec"><div class="sec-h"><h2>הערב, מהמאגר</h2>${askLink("מה הכי שווה הלילה?","מה הכי שווה לעשות הלילה, לפי המאגר שלנו והמיקום של המלון?")}</div>
-        <ol class="ranked">${tonight.map(rankedLi).join("")}</ol></section>`:""}`;
+      ${upcoming?`<p class="nextup"><span class="eyebrow">הבא בתור</span> <span class="mono">${esc(upcoming.time)}</span> ${bdi(upcoming.name)}</p>`:""}
+      ${dayTimeline(t,{compact:true})}
+      <div class="asks">${askLink("תוכנית גשם","יורד גשם. תן לנו תוכנית חלופית להיום מהמאגר, קרוב למלון.")}${askLink("מה עושים עכשיו?","מה כדאי לעשות עכשיו, לפי השעה, המלון והמאגר שלנו?")}</div></section>
+      ${tonight.length?`<section class="sec"><div class="sec-h"><h2>הערב</h2>${askLink("מה הכי שווה הלילה?","מה הכי שווה לעשות הלילה, לפי המאגר שלנו והמיקום של המלון?")}</div>
+        <ol class="brief">${tonight.map(briefLi).join("")}</ol></section>`:""}`;
   }
   const nxt=pre?STOPS[0]:STOPS[STOPS.indexOf(S)+1];
   const nextHtml=nxt&&!post?`<a class="next" href="#${nxt.k}"><div class="plate" data-plate="${nxt.k}" role="img" aria-label="${nxt.n}"></div><div><div class="eyebrow">${pre?"הפרק הראשון":"הפרק הבא"} · <span class="mono">${fShort(nxt.s)}</span></div><h3>${nxt.n}</h3><p>${bdi(nxt.hotel.name)} · ${diffDays(t,nxt.s)>0?`בעוד ${diffDays(t,nxt.s)} ימים`:"היום"}</p></div></a>`:"";
-  const quick=`<div class="quick" role="group" aria-label="פעולות מהירות">
-    <button class="qa" type="button" data-act="new" data-kind="activity">${ico("i-plus")}פעילות</button>
-    <button class="qa" type="button" data-act="new" data-kind="meal" data-cat="food">${ico("i-fork")}מסעדה</button>
-    <button class="qa" type="button" data-act="new" data-kind="booking" data-cat="book">${ico("i-ticket")}הזמנה</button>
-    <button class="qa" type="button" data-act="new" data-kind="note" data-cat="warn">${ico("i-note")}הערה</button>
-    <button class="qa" type="button" data-act="ask" data-q="יורד גשם. תן לנו תוכנית חלופית להיום מהמאגר, קרוב למלון.">${ico("i-rain")}תוכנית גשם</button>
-    <a class="qa" href="#map">${ico("i-map")}מפה</a></div>`;
-  return `${mast}${hero}${progressHtml()}<div class="sec" style="margin-top:22px">${quick}</div>
+  return `${hero}${progressHtml()}
    <div class="twocol"><div>${main}</div><aside>
     <section class="sec"><div class="sec-h"><h2>${pre?"היעד הראשון":"מה הלאה"}</h2></div>${nextHtml||'<p class="lede">זה הפרק האחרון.</p>'}</section>
     <section class="sec"><div class="sec-h"><h2>על המפה</h2><a class="more" href="#map" data-act="mapregion" data-r="${S.k}">פתיחה</a></div><a class="mapthumb" href="#map" data-act="mapregion" data-r="${S.k}">${miniMap(S.k)}<span class="lbl">${S.n} · ${itemsOf(S.k).filter(i=>i.lat).length} מקומות</span></a></section>
@@ -959,8 +973,8 @@ function evHtml(i,{isNow,reorder,first,last}={}){
   const time=i.time?`${esc(i.time)}`:"";
   const sub=k==="transport"?"דרך":k==="booking"?"הזמנה":k==="meal"?"ארוחה":CATN[i.cat]||"";
   const side=reorder&&!i.time?`<div class="reorder"><button type="button" data-act="mv" data-dir="-1" data-id="${esc(i.id)}" aria-label="הזזה למעלה" ${first?"disabled":""}>${ico("i-up")}</button><button type="button" data-act="mv" data-dir="1" data-id="${esc(i.id)}" aria-label="הזזה למטה" ${last?"disabled":""}>${ico("i-down")}</button></div>`:`<div class="side">${doneBox(i)}</div>`;
-  return `<li class="${cls}"><div class="t">${time}<small>${time?"":esc(sub)}</small></div>
-   <div class="body" data-act="open" data-id="${esc(i.id)}" role="button" tabindex="0"><div class="k">${k==="booking"?"הזמנה · ":""}${tagHtml(i)}${i.fav?'<span style="color:var(--accent)">♥</span>':""}</div>
+  return `<li class="${cls}"><div class="t">${time}</div>
+   <div class="body" data-act="open" data-id="${esc(i.id)}" role="button" tabindex="0"><div class="k">${["booking","transport"].includes(k)?`<span class="kl">${esc(sub)}</span>`:""}${tagHtml(i)}${i.fav?'<span style="color:var(--accent)">♥</span>':""}</div>
    <div class="n">${bdi(i.name)}</div>${metaLine(i)?`<div class="m">${metaLine(i)}</div>`:""}${i.mine?`<div class="m" style="font-family:var(--f-serif);font-style:italic">"${bdi(i.mine)}"</div>`:""}</div>${side}</li>`}
 
 /* =========================================================
@@ -973,17 +987,17 @@ function vPlan(){
   const pool=itemsOf(S.k).filter(i=>!i.date&&i.status!=="skip"&&i.status!=="done"&&!["warn"].includes(i.cat)).sort((a,b)=>(a.status==="want"?-1:0)-(b.status==="want"?-1:0)||(tagRank[a.tag]??5)-(tagRank[b.tag]??5)||(b.score||0)-(a.score||0));
   const di=dayItems(planDay);
   return `<div class="days" role="group" aria-label="בחירת יום"><div class="rail" id="dayRail">${rail}</div></div>
-  <header class="dayhead"><div class="num"><small>יום</small>${dayNo(planDay)}</div><h2>${fDay(planDay)}</h2><p>${S.ch} · ${S.n} · ${bdi(S.hotel.name)}</p></header>
+  <header class="dayhead"><div class="eyebrow">יום ${dayNo(planDay)} מתוך ${DAYS.length} · ${S.no} · ${S.n}</div><h2>${fDay(planDay)}</h2><p>${bdi(S.hotel.name)}${planDay===today()?' · <span class="live">היום</span>':""}</p></header>
   <div class="dayacts">
     <button class="btn sm" type="button" data-act="new" data-date="${planDay}">${ico("i-plus")}הוספה ליום</button>
     ${di.some(i=>!i.time)&&di.length>1?`<button class="btn ghost sm" type="button" data-act="reorder" aria-pressed="${reorderMode}">${reorderMode?"סיום סידור":"סידור"}</button>`:""}
     <span class="sp"></span>
     ${di.length?askLink("סדר לי את המסלול",`סדר את ${fDay(planDay)} ב${S.n} במסלול הגיוני: שעות, זמני נסיעה ומה כדאי לוותר. עדכן שעות לפריטים של היום.`):askLink("תכנן לי את היום",`תכנן לנו את ${fDay(planDay)} ב${S.n} מהמאגר ושבץ פריטים ליום הזה עם שעות.`)}
   </div>
-  ${dayTimeline(planDay,{reorder:reorderMode})}
+  <div class="plangrid"><div>${dayTimeline(planDay,{reorder:reorderMode})}</div>
   <section class="tray"><div class="sec-h"><h3>מהמאגר של ${S.n}</h3><a class="more" href="#${S.k}">כל הפרק</a></div>
    ${pool.length?`<div class="row">${pool.slice(0,14).map(i=>`<div class="slip"><div class="eyebrow">${tagHtml(i)} ${scoreHtml(i)}</div><div class="n" data-act="open" data-id="${esc(i.id)}">${bdi(i.name)}</div><div class="m">${CATN[i.cat]||""}${i.when?" · "+bdi(i.when):""}</div><button class="btn ghost sm" type="button" data-act="sched" data-id="${esc(i.id)}" data-day="${planDay}">${ico("i-plus")}ליום ${dayNo(planDay)}</button></div>`).join("")}</div>`:`<p class="lede">כל הפריטים של ${S.n} כבר משובצים או בוצעו.</p>`}
-  </section>`}
+  </section></div>`}
 function centerDay(){const b=document.querySelector(`.day[aria-pressed="true"]`);if(b)b.scrollIntoView({inline:"center",block:"nearest",behavior:"instant"in document.documentElement.style?"instant":"auto"})}
 
 /* =========================================================
@@ -993,7 +1007,7 @@ function vChapters(){
   const t=today();
   return `<header class="jhead" style="border-bottom:0"><div class="eyebrow">חמישה פרקים · 26 ימים</div><h1>היעדים</h1><p class="lede">כל יעד הוא פרק. המלון, הימים, המדריך שלכם והמפה.</p></header>
   <ol class="chapters">${STOPS.map(s=>{const its=itemsOf(s.k);const d=its.filter(i=>i.status==="done").length;const w=its.filter(i=>i.status==="want"||i.date).length;
-    return `<li><a class="chrow ${stopOf(t)===s?"cur":""}" href="#${s.k}"><div><div class="no">${s.no}</div><h2>${s.n}</h2><span class="thai" lang="th">${s.th}</span>
+    return `<li><a class="chrow ${stopOf(t)===s?"cur":""}" href="#${s.k}"><div><div class="no">${s.no}</div><h2>${s.n}</h2><span class="thai" lang="th" dir="ltr">${s.th}</span>
       <span class="when">${fShort(s.s)} – ${fShort(s.e)}</span><div class="hot">${bdi(s.hotel.name)} · ${diffDays(s.s,s.e)}&nbsp;לילות</div><div class="cnt">${its.length}&nbsp;פריטים במדריך · ${w}&nbsp;בתוכנית · ${d}&nbsp;בוצעו</div></div>
       <div class="plate" data-plate="${s.k}" role="img" aria-label="איור: ${s.n}"></div></a></li>`}).join("")}</ol>`}
 
@@ -1024,20 +1038,21 @@ function vChapter(S){
      ${sec("warn","שימו לב","",`<ul class="notes">${by("warn").map(noteLi).join("")}</ul>`,true)}
     </div>`}
   const nd=notesDocs[S.k]||{};
-  return `<section class="chhero"><div class="plate" data-plate="${S.k}" role="img" aria-label="איור: ${S.n}"><span class="cap">${S.en.toUpperCase()} · ${fShort(S.s)}–${fShort(S.e)}</span></div>
-    <div class="over"><div class="no">${S.no}</div><h1>${S.n}</h1><span class="thai" lang="th">${S.th}</span><p class="line">${esc(S.line)}</p></div></section>
+  return `<section class="chhero"><div class="plate" data-plate="${S.k}" role="img" aria-label="איור: ${S.n}"></div>
+    <div class="over"><div class="no">${S.no}</div><h1>${S.n}</h1><span class="thai" lang="th" dir="ltr">${S.th}</span><p class="line">${esc(S.line)}</p></div></section>
   <nav class="chnav" aria-label="פרקים">${prev?`<a href="#${prev.k}">${ico("i-prev")}${prev.n}</a>`:`<a href="#chapters">${ico("i-prev")}כל היעדים</a>`}${next?`<a href="#${next.k}">${next.n}${ico("i-next")}</a>`:`<a href="#chapters">כל היעדים${ico("i-next")}</a>`}</nav>
   <section class="hotel"><div><div class="lbl">המלון</div><h3>${bdi(S.hotel.name)}</h3><div class="it-m">${bdi(S.hotel.area)}</div></div>
    <dl><div><dt>צ'ק־אין</dt><dd class="ltr">${fShort(S.s)}</dd></div><div><dt>צ'ק־אאוט</dt><dd class="ltr">${fShort(S.e)}</dd></div><div><dt>לילות</dt><dd>${diffDays(S.s,S.e)}</dd></div></dl>
    <div class="acts"><a class="btn ghost sm" href="${esc("https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(S.hotel.name+" "+S.en))}" target="_blank" rel="noopener">${ico("i-pin")}במפות</a>${askLink("מה שווה ליד המלון?",`מה הכי שווה ליד ${S.hotel.name} (${S.hotel.area}) – בהליכה או בנסיעה קצרה? קודם מהמאגר, אחר כך רעיונות חדשים.`)}</div></section>
-  <section class="sec" style="margin-top:22px"><div class="sec-h"><h2 style="font-size:28px">הימים בפרק</h2></div><div class="daychips">${ds.map(d=>`<a class="daychip ${d===t?"today":""}" href="#plan" data-act="gotoday" data-day="${d}"><small>${fW(d)}</small><b>${+d.slice(8)}</b><small>${dayItems(d).length||"–"}</small></a>`).join("")}</div></section>
+  <section class="sec" style="margin-top:22px"><div class="sec-h"><h2 style="font-size:28px">הימים בפרק</h2></div><div class="daystrip">${ds.map(d=>{const n=dayItems(d).length;return `<a class="day ${d<t?"past":""} ${d===t?"today":""}" href="#plan" data-act="gotoday" data-day="${d}" aria-label="${fDay(d)}, ${n} פריטים"><span class="w">${fW(d)}</span><span class="d">${+d.slice(8)}</span><span class="dots">${"<i></i>".repeat(Math.min(n,4))}</span></a>`}).join("")}</div></section>
   <section class="sec"><div class="sec-h"><h2>המדריך</h2><button class="btn sm" type="button" data-act="new" data-dest="${S.k}">${ico("i-plus")}הוספה</button></div>${filt}<div class="guide">${guide}</div></section>
   <section class="sec chapter-map"><div class="sec-h"><h2>על המפה</h2><a class="more" href="#map" data-act="mapregion" data-r="${S.k}">מפה מלאה</a></div><a class="mapthumb" href="#map" data-act="mapregion" data-r="${S.k}" aria-label="פתיחת המפה של ${S.n}">${miniMap(S.k)}<span class="lbl">${all.filter(i=>i.lat).length} מקומות מסומנים</span></a></section>
   <section class="chnotes"><h3>הפנקס של ${S.n}</h3><label class="sr" for="chnote">הערות לפרק</label><textarea id="chnote" data-k="${S.k}" dir="auto" placeholder="מספרי טלפון, שעות מעבורת, מה שסיכמנו…">${esc(nd.text||"")}</textarea><div class="saved-ind" id="noteInd"></div></section>`}
+function briefLi(i){return `<li><span class="sc mono">${i.score||"–"}</span><div><div class="it-n" data-act="open" data-id="${esc(i.id)}">${bdi(i.name)}</div><div class="it-m">${[i.when,i.dist].filter(Boolean).map(bdi).join(" · ")}</div></div>${favBtn(i)}</li>`}
 function rankedLi(i){return `<li class="${i.status==="done"?"li-done":i.status==="skip"?"li-skip":""}"><div class="sc ${i.score?"":"na"}">${i.score||"–"}<small>${i.score?"התאמה":""}</small></div><div><div class="it-row" style="margin:0 0 3px">${tagHtml(i)}</div><div class="it-n" data-act="open" data-id="${esc(i.id)}">${bdi(i.name)}</div>${metaLine(i)?`<div class="it-m">${metaLine(i)}</div>`:""}${i.note?`<p class="it-note">${bdi(i.note)}</p>`:""}<div class="it-row">${stMini(i)}</div></div>${favBtn(i)}</li>`}
 function plainLi(i){return `<li class="${i.status==="done"?"li-done":i.status==="skip"?"li-skip":""}"><div class="it-row" style="margin:0 0 3px">${tagHtml(i)}${scoreHtml(i)}${i.dest==="all"?'<span class="st-mini">כל הטיול</span>':""}</div><div class="it-n" data-act="open" data-id="${esc(i.id)}">${bdi(i.name)}</div>${metaLine(i)?`<div class="it-m">${metaLine(i)}</div>`:""}${i.note?`<p class="it-note">${bdi(i.note)}</p>`:""}<div class="it-row">${stMini(i)}</div></li>`}
 function menuLi(i){return `<li class="${i.status==="done"?"li-done":""}"><div class="top"><span class="it-n" data-act="open" data-id="${esc(i.id)}">${bdi(i.name)}</span><span class="lead"></span><span class="price">${bdi(i.cost||i.when||"")}</span></div>${i.note?`<p class="it-note">${bdi(i.note)}</p>`:""}<div class="it-row">${tagHtml(i)}${scoreHtml(i)}${stMini(i)}</div></li>`}
-function pcHtml(i){const s=stopByK(i.dest)||STOPS[0];const R=rng([...String(i.id)].reduce((a,c)=>Math.imul(a^c.charCodeAt(0),2654435761)>>>0,7));R();const z=Math.round(150+R()*110),bx=Math.round(R()*100),by=Math.round(20+R()*60),flip=R()<.5;return `<article class="pc" data-act="open" data-id="${esc(i.id)}" tabindex="0" role="button"><div class="plate" data-plate="${s.k}" style="background-size:${z}%;background-position:${bx}% ${by}%${flip?";transform:scaleX(-1)":""}"></div><div class="it-row" style="margin-top:10px">${tagHtml(i)}${scoreHtml(i)}</div><div class="n">${bdi(i.name)}</div><div class="m">${metaLine(i)}</div><div class="it-row">${stMini(i)}</div></article>`}
+function pcHtml(i){const s=stopByK(i.dest)||STOPS[0];const v=[...String(i.id)].reduce((a,c)=>Math.imul(a^c.charCodeAt(0),2654435761)>>>0,7)%997+1;return `<article class="pc" data-act="open" data-id="${esc(i.id)}" tabindex="0" role="button"><div class="plate" data-plate="${s.k}" data-v="${v}"></div><div class="it-row" style="margin-top:10px">${tagHtml(i)}${scoreHtml(i)}</div><div class="n">${bdi(i.name)}</div><div class="m">${metaLine(i)}</div><div class="it-row">${stMini(i)}</div></article>`}
 function routeLi(i){const parts=String(i.name).split(/\s*[→←]\s*/);const path=parts.length>1?parts.map(p=>`<span>${bdi(p)}</span>`).join(ico("i-arrow")):bdi(i.name);
   return `<li data-act="open" data-id="${esc(i.id)}" style="cursor:pointer"><div class="path">${path}</div><div class="it-m">${metaLine(i)}</div>${i.note?`<p class="it-note">${bdi(i.note)}</p>`:""}<div class="it-row">${stMini(i)}</div></li>`}
 function ticketHtml(i){return `<div class="ticket"><div><div class="lbl">${tagL(i.tag)}${i.when?" · "+bdi(i.when):""}</div><div class="it-n" data-act="open" data-id="${esc(i.id)}" style="margin-top:4px">${bdi(i.name)}</div>${i.note?`<div class="it-m">${bdi(i.note)}</div>`:""}</div>${doneBox(i)}</div>`}
@@ -1134,7 +1149,7 @@ function openItem(id){const i=byId(id);if(!i)return;const S=stopByK(i.dest);
    <div class="tags">${tagHtml(i)}${scoreHtml(i)}${favBtn(i)}</div>
    <h2>${bdi(i.name)}</h2>
    ${i.note?`<p class="why">${bdi(i.note)}</p>`:""}
-   <dl>${i.when?`<dt>מתי</dt><dd>${bdi(i.when)}</dd>`:""}${i.cost?`<dt>מחיר</dt><dd>${bdi(i.cost)}</dd>`:""}${i.dist?`<dt>הגעה</dt><dd>${bdi(i.dist)}</dd>`:""}${i.ref?`<dt>מס' הזמנה</dt><dd class="mono">${bdi(i.ref)}</dd>`:""}${i.place?`<dt>כתובת</dt><dd>${bdi(i.place)}</dd>`:""}<dt>סוג</dt><dd>${KINDN[kindOf(i)]}</dd>${i.date?`<dt>במסלול</dt><dd>יום ${dayNo(i.date)} · ${fDay(i.date)}${i.time?` · <span class="mono">${esc(i.time)}</span>`:""}</dd>`:""}</dl>
+   <dl>${i.when?`<dt>מתי</dt><dd>${bdi(i.when)}</dd>`:""}${i.cost?`<dt>מחיר</dt><dd>${bdi(i.cost)}</dd>`:""}${i.dist?`<dt>הגעה</dt><dd>${bdi(i.dist)}</dd>`:""}${i.ref?`<dt>מס' הזמנה</dt><dd class="mono"><bdi dir="ltr">${esc(i.ref)}</bdi></dd>`:""}${i.place?`<dt>כתובת</dt><dd>${bdi(i.place)}</dd>`:""}<dt>סוג</dt><dd>${KINDN[kindOf(i)]}</dd>${i.date?`<dt>במסלול</dt><dd>יום ${dayNo(i.date)} · ${fDay(i.date)}${i.time?` · <span class="mono">${esc(i.time)}</span>`:""}</dd>`:""}</dl>
    <div class="seg3" role="group" aria-label="סטטוס">${Object.entries(ST).map(([k,n])=>`<button type="button" data-act="st" data-id="${esc(i.id)}" data-s="${k}" aria-pressed="${i.status===k}">${n}</button>`).join("")}</div>
    <div class="sched"><label for="sd">שיבוץ</label><select id="sd"><option value="">לא משובץ</option>${daysOpts}</select><label class="sr" for="stime">שעה</label><input id="stime" type="time" value="${esc(i.time||"")}" dir="ltr"><button class="btn sm" type="button" data-act="schedsave" data-id="${esc(i.id)}">שמירה</button></div>
    <label class="sr" for="mineIn">הערות שלנו</label><textarea class="mine" id="mineIn" data-mine="${esc(i.id)}" dir="auto" placeholder="הערות שלנו…">${esc(i.mine||"")}</textarea>
@@ -1304,7 +1319,7 @@ function describePatch(p){if(!p)return "";const o=[];if(p.date!==undefined)o.pus
 function renderChat(){const box=$("#ccMsgs");if(!box)return;
   if(!sample){box.innerHTML=`<div class="cc-hello"><h3>הקונסיירז'</h3><p class="cc-off">${sampleState==="loading"?"מתחבר…":"הקונסיירז' זמין כשהדף פתוח ב־claude.ai עם חשבון מחובר."}</p></div>`;return}
   const hello=`<div class="cc-hello"><h3>מה בא לכם?</h3><p>אני מכיר את המסלול, המלונות והמאגר שלכם. אני יכול לתכנן יום, לשבץ, להזיז, לסמן ולהוסיף. בלי אינטרנט – אז על מסיבות של הלילה ותחזיות, נבדוק בשיחה הראשית.</p></div>`;
-  box.innerHTML=(chat.length?"":hello)+chat.map((m,mi)=>m.r==="u"?`<div class="msg u" dir="auto">${esc(m.t)}</div>`:`<div class="msg a ${m.think?"think":""}"><div class="by">${ico("i-seal","seal")}הקונסיירז'</div><div class="txt" dir="auto">${richText(m.t)}</div>${actsHtml(m,mi)}</div>`).join("");
+  box.innerHTML=(chat.length?"":hello)+chat.map((m,mi)=>m.r==="u"?`<div class="msg u" dir="auto">${esc(m.t)}</div>`:`<div class="msg a ${m.think?"think":""}"><div class="by">${ico("i-seal","seal")}הקונסיירז'</div><div class="txt" dir="rtl">${richText(m.t)}</div>${actsHtml(m,mi)}</div>`).join("");
   box.scrollTop=box.scrollHeight}
 async function persistChat(){if(!db||!canWrite)return;try{await db.doc("chat/log").set({messages:chat.slice(-60).map(({think,...m})=>m),updatedAt:new Date().toISOString()})}catch(e){}}
 async function undoAct(key){const[mi,ai]=key.split(":").map(Number);const m=chat[mi];const a=m&&m.acts&&m.acts[ai];if(!a||a.undone)return;
@@ -1353,7 +1368,7 @@ route=readHash();render(true);
     db.collection("notes").onSnapshot(s=>{notesDocs=Object.fromEntries(s.docs.map(d=>[d.id,d.data()]));const ta=$("#chnote");if(ta&&document.activeElement!==ta){const k=ta.dataset.k;ta.value=(notesDocs[k]||{}).text||""}},()=>{});
     db.doc("chat/log").onSnapshot(s=>{if(busy)return;chat=(s.exists&&s.data().messages)||[];if(ccOn)renderChat()},()=>{});
   }
-  sample=await claude.use("sample");sampleState=sample?"on":"off";if(sample)$("#askBtn").hidden=false;if(ccOn)renderChat();
+  sample=await claude.use("sample");sampleState=sample?"on":"off";if(ccOn)renderChat();
   dict=await claude.use("dictation");if(dict)$("#micBtn").hidden=false;
   downloads=await claude.use("downloads");
 })();
