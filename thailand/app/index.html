@@ -396,6 +396,15 @@ main{display:block}
 .notes .it-n{font-size:15.5px}
 .notes .it-note{font-size:14px}
 .plain li{padding-block:13px}
+.st-mini.tix{background:var(--accent);color:var(--accent-ink);text-decoration:none}
+.st-mini.new{background:color-mix(in srgb,var(--sea) 16%,transparent);color:var(--sea)}
+.localsec{margin-top:30px;background:linear-gradient(160deg,var(--brand-2),var(--raise) 70%);border-radius:var(--r-l);padding:20px 18px;box-shadow:var(--sh-2)}
+.localsec .lh h3{font:700 24px/1.15 var(--f-display);letter-spacing:-.02em;margin-top:4px}
+.localsec .lh p{font-size:14.5px;color:var(--ink-2);margin-top:6px}
+.localsec .lcols{display:grid;gap:18px;margin-top:16px}
+.localsec h4{display:flex;align-items:center;gap:8px;font:600 16px/1.2 var(--f-display);margin:0 0 8px}
+.localsec h4 svg{width:20px;height:20px;color:var(--brand)}
+@media (min-width:760px){.localsec .lcols{grid-template-columns:1fr 1fr}}
 
 .chnotes{margin-top:26px;padding:18px;background:var(--raise);border-radius:var(--r-l);box-shadow:var(--sh-2)}
 .chnotes h3{font:600 19px/1.2 var(--f-display)}
@@ -645,6 +654,7 @@ form.ed legend{font:600 15px/1 var(--f-display);padding:0;margin-bottom:4px;floa
     <symbol id="i-boat" viewBox="0 0 24 24"><path d="M3 15h18l-2.5 4h-13zM12 4v11M12 5l6 8h-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
     <symbol id="i-note" viewBox="0 0 24 24"><path d="M5 4h14v11l-5 5H5zM14 20v-5h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
     <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-spa" viewBox="0 0 24 24"><path d="M12 21c-4.5 0-8-2.6-8-6.5 2.7 0 5.3 1.2 8 3.6 2.7-2.4 5.3-3.6 8-3.6 0 3.9-3.5 6.5-8 6.5zM12 18c-2-2.2-3-4.6-3-7.2C9 8 10.3 5.4 12 3c1.7 2.4 3 5 3 7.8 0 2.6-1 5-3 7.2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
     <symbol id="i-seal" viewBox="0 0 24 24"><path d="M12 2.5c.6 3.7 2.8 6.4 6.6 7.3-3.8.9-6 3.6-6.6 7.3-.6-3.7-2.8-6.4-6.6-7.3 3.8-.9 6-3.6 6.6-7.3z" fill="currentColor"/><path d="M18.5 15.5c.25 1.5 1.1 2.5 2.6 2.8-1.5.3-2.35 1.3-2.6 2.8-.25-1.5-1.1-2.5-2.6-2.8 1.5-.3 2.35-1.3 2.6-2.8z" fill="currentColor" opacity=".7"/></symbol>
   </defs>
 </svg>
@@ -723,7 +733,7 @@ const STOPS=[
   hotel:{name:"Novotel Platinum Pratunam",area:"פרטונאם",lat:13.7503,lng:100.5394},
   line:"הארד טכנו, יאווראט בלילה ורופטופ לסיום.",box:[100.47,13.7,100.6,13.78]}];
 const TRIP={s:"2026-11-25",e:"2026-12-20"};
-const CATS=[["event","אירועים"],["night","חיי לילה"],["sea","חופים ושייט"],["extreme","אקסטרים וטבע"],["food","אוכל"],["shop","שופינג"],["move","תחבורה"],["book","להזמין"],["warn","שימו לב"]];
+const CATS=[["event","אירועים"],["night","חיי לילה"],["sea","חופים ושייט"],["extreme","אקסטרים וטבע"],["food","אוכל"],["shop","שופינג"],["move","תחבורה"],["book","להזמין"],["warn","שימו לב"],["spa","עיסוי וספא"],["local","אוכל מקומי"]];
 const CATN=Object.fromEntries(CATS);
 const TAGS={"MUST":["חובה","MUST"],"HIGH":["מומלץ","HIGH"],"OPTIONAL":["אם יש זמן","OPTIONAL"],"HIDDEN GEM":["פנינה נסתרת","GEM"],"BACKUP":["גיבוי","BACKUP"]};
 const KINDS=[["activity","פעילות"],["meal","ארוחה"],["transport","תחבורה"],["booking","הזמנה"],["free","זמן חופשי"],["note","הערה"]];
@@ -837,7 +847,7 @@ window.addEventListener("scroll",()=>{$("#topbar").classList.toggle("scrolled",s
 /* ---------- shared fragments ---------- */
 const tagHtml=i=>i.tag?`<span class="tag ${tagK(i.tag)}">${tagL(i.tag)}</span>`:"";
 const scoreHtml=i=>i.score?`<span class="score">${esc(i.score)}/10</span>`:"";
-const stMini=i=>[i.status?`<span class="st-mini ${i.status}">${ST[i.status]}</span>`:"",i.date?`<span class="st-mini date">יום ${dayNo(i.date)} · ${fShort(i.date)}${i.time?" · "+esc(i.time):""}</span>`:"",i.fav?`<span class="st-mini" style="color:var(--accent)">מועדף</span>`:""].join("");
+const stMini=i=>[safeUrl(i.tickets)?`<a class="st-mini tix" href="${esc(i.tickets)}" target="_blank" rel="noopener">כרטיסים ↗</a>`:"",i.isNew?`<span class="st-mini new">חדש</span>`:"",i.status?`<span class="st-mini ${i.status}">${ST[i.status]}</span>`:"",i.date?`<span class="st-mini date">יום ${dayNo(i.date)} · ${fShort(i.date)}${i.time?" · "+esc(i.time):""}</span>`:"",i.fav?`<span class="st-mini" style="color:var(--accent)">מועדף</span>`:""].join("");
 const metaLine=i=>[i.when,i.cost,i.dist].filter(Boolean).map(bdi).join(" · ");
 const favBtn=i=>`<button class="fav" type="button" data-act="fav" data-id="${esc(i.id)}" aria-pressed="${!!i.fav}" aria-label="${i.fav?"הסרה מהמועדפים":"הוספה למועדפים"}">${ico("i-heart")}</button>`;
 const doneBox=i=>`<button class="box" type="button" data-act="done" data-id="${esc(i.id)}" aria-pressed="${i.status==="done"}" aria-label="${i.status==="done"?"ביטול סימון כבוצע":"סימון כבוצע"}">${ico("i-check")}</button>`;
@@ -989,7 +999,9 @@ function vChapter(S){
      ${sec("move","תחבורה","",`<ul class="routes">${by("move").map(routeLi).join("")}</ul>`)}
      ${sec("book","להזמין","",`<div class="tickets">${by("book").map(ticketHtml).join("")}</div>`)}
      ${sec("warn","שימו לב","",`<ul class="notes">${by("warn").map(noteLi).join("")}</ul>`,true)}
-    </div>`}
+    </div>
+    ${by("spa").length||by("local").length?`<section class="localsec"><div class="lh"><span class="eyebrow">ליד המלון · לא תיירותי</span><h3>מקומי באמת ב${S.n}</h3><p>איפה לעשות עיסוי טוב ואיפה אוכלים המקומיים, באזור של ${bdi(S.hotel.area)}.</p></div>
+     <div class="lcols">${by("spa").length?`<div><h4>${ico("i-spa")}עיסוי וספא</h4><ul class="plain">${by("spa").map(plainLi).join("")}</ul></div>`:""}${by("local").length?`<div><h4>${ico("i-fork")}אוכל מקומי</h4><ul class="plain">${by("local").map(plainLi).join("")}</ul></div>`:""}</div></section>`:""}`}
   const nd=notesDocs[S.k]||{};
   return `<section class="chhero"><div class="plate" data-plate="${S.k}" role="img" aria-label="איור: ${S.n}"></div>
     <div class="over"><div class="no">${S.no}</div><h1>${S.n}</h1><span class="thai" lang="th" dir="ltr">${S.th}</span><p class="line">${esc(S.line)}</p></div></section>
@@ -1107,6 +1119,7 @@ function openItem(id){const i=byId(id);if(!i)return;const S=stopByK(i.dest);
    <div class="sched"><label for="sd">שיבוץ</label><select id="sd"><option value="">לא משובץ</option>${daysOpts}</select><label class="sr" for="stime">שעה</label><input id="stime" type="time" value="${esc(i.time||"")}" dir="ltr"><button class="btn sm" type="button" data-act="schedsave" data-id="${esc(i.id)}">שמירה</button></div>
    <label class="sr" for="mineIn">הערות שלנו</label><textarea class="mine" id="mineIn" data-mine="${esc(i.id)}" dir="auto" placeholder="הערות שלנו…">${esc(i.mine||"")}</textarea>
    <div class="dactions">
+    ${safeUrl(i.tickets)?`<a class="btn sm" href="${esc(i.tickets)}" target="_blank" rel="noopener">${ico("i-ticket")}כרטיסים</a>`:""}
     ${link?`<a class="btn ghost sm" href="${esc(link)}" target="_blank" rel="noopener">${ico("i-link")}קישור</a>`:""}
     <a class="btn ghost sm" href="${esc(mapsUrl(i))}" target="_blank" rel="noopener">${ico("i-pin")}Google Maps</a>
     ${i.lat?`<button class="btn ghost sm" type="button" data-act="showonmap" data-id="${esc(i.id)}">${ico("i-map")}על המפה</button>`:""}
@@ -1132,10 +1145,11 @@ function openEditor(it,preset={}){const v=it||{dest:route&&stopByK(route)?route:
     <label>כתובת או שם המקום<input name="place" dir="auto" value="${esc(v.place||"")}"></label>
     <label>למה זה מתאים לנו<textarea name="note" rows="3" dir="auto">${esc(v.note||"")}</textarea></label>
     <label>קישור<input name="link" type="url" dir="ltr" value="${esc(v.link||"")}" placeholder="https://"></label>
+    <label>קישור לכרטיסים<input name="tickets" type="url" dir="ltr" value="${esc(v.tickets||"")}" placeholder="https://"></label>
     <label>מיקום על המפה<input name="geo" dir="ltr" value="${v.lat?esc(v.lat+", "+v.lng):""}" placeholder="13.7465, 100.5348"><span class="hint">קואורדינטות, או קישור Google Maps שמכיל ‎@lat,lng</span></label>
    </fieldset>
    <div class="formacts"><button class="btn" type="submit">שמירה</button><button class="btn ghost" type="button" data-act="closesheet">ביטול</button></div></form>`,()=>{
-   $("#edForm").addEventListener("submit",async e=>{e.preventDefault();const f=e.target;const val={};for(const k of["name","dest","cat","kind","tag","when","cost","dist","note","link","date","time","ref","place"])val[k]=f[k].value.trim();
+   $("#edForm").addEventListener("submit",async e=>{e.preventDefault();const f=e.target;const val={};for(const k of["name","dest","cat","kind","tag","when","cost","dist","note","link","tickets","date","time","ref","place"])val[k]=f[k].value.trim();if(val.tickets&&!safeUrl(val.tickets)){toast("קישור לכרטיסים חייב להתחיל ב־https://");return}
     if(!val.name){f.name.focus();toast("צריך לתת שם");return}
     if(val.link&&!safeUrl(val.link)){toast("קישור חייב להתחיל ב־https://");f.link.focus();return}
     val.score=f.score.value?Math.max(1,Math.min(10,Number(f.score.value))):null;
@@ -1240,11 +1254,11 @@ const AGENT=`אתה הסוכן האישי (הקונסיירז') של אביב ו
 כשאתה מזכיר פריט שקיים במאגר, כתוב את המזהה שלו בסוגריים כפולים, למשל [[p04]], והאפליקציה תציג אותו ככרטיס לחיץ. אל תכתוב את המזהה בשום צורה אחרת.
 שיבוץ למסלול: לפריט יש date (YYYY-MM-DD, רק בין 2026-11-25 ל-2026-12-20) ו-time (HH:MM). לשבץ = update_item עם date ו-time. "זמן חופשי" = kind "free". מחיקה דורשת אישור של המשתמש באפליקציה – השתמש ב-delete_item ותגיד שצריך לאשר.`;
 const ccTools=[
- {name:"add_item",description:"מוסיף פריט חדש למאגר (ואם יש date – גם למסלול). מחזיר את ה-id החדש.",inputSchema:{type:"object",properties:{name:{type:"string"},dest:{type:"string",enum:["phuket","phangan","samui","pattaya","bangkok","all"]},cat:{type:"string",enum:CATS.map(c=>c[0])},kind:{type:"string",enum:KINDS.map(k=>k[0])},tag:{type:"string",enum:Object.keys(TAGS)},score:{type:"number"},when:{type:"string"},cost:{type:"string"},dist:{type:"string"},note:{type:"string"},link:{type:"string"},date:{type:"string",description:"YYYY-MM-DD"},time:{type:"string",description:"HH:MM"}},required:["name","dest","cat"]},
-  execute:async a=>{if(!db||!canWrite)throw new Error("אין הרשאת כתיבה");const v={};for(const k of["name","dest","cat","kind","tag","when","cost","dist","note","link","date","time"])if(a[k]!=null)v[k]=String(a[k]);if(a.score!=null)v.score=Number(a.score);
+ {name:"add_item",description:"מוסיף פריט חדש למאגר (ואם יש date – גם למסלול). מחזיר את ה-id החדש.",inputSchema:{type:"object",properties:{name:{type:"string"},dest:{type:"string",enum:["phuket","phangan","samui","pattaya","bangkok","all"]},cat:{type:"string",enum:CATS.map(c=>c[0])},kind:{type:"string",enum:KINDS.map(k=>k[0])},tag:{type:"string",enum:Object.keys(TAGS)},score:{type:"number"},when:{type:"string"},cost:{type:"string"},dist:{type:"string"},note:{type:"string"},link:{type:"string"},tickets:{type:"string",description:"https URL לרכישת כרטיסים"},date:{type:"string",description:"YYYY-MM-DD"},time:{type:"string",description:"HH:MM"}},required:["name","dest","cat"]},
+  execute:async a=>{if(!db||!canWrite)throw new Error("אין הרשאת כתיבה");const v={};for(const k of["name","dest","cat","kind","tag","when","cost","dist","note","link","tickets","date","time"])if(a[k]!=null)v[k]=String(a[k]);if(v.tickets&&!safeUrl(v.tickets))delete v.tickets;if(a.score!=null)v.score=Number(a.score);
    if(v.date&&!DAYS.includes(v.date))throw new Error("date מחוץ לטיול");if(v.link&&!safeUrl(v.link))delete v.link;const id=await createItem(v);curActs.push({t:"add",id,name:v.name});return{ok:true,id}}},
- {name:"update_item",description:"מעדכן פריט קיים לפי id. fields יכול לכלול: status (want/done/skip/''), mine, note, tag, score, when, cost, dist, link, name, date, time, fav (true/false), kind, rating (1-5), memory.",inputSchema:{type:"object",properties:{id:{type:"string"},fields:{type:"object"}},required:["id","fields"]},
-  execute:async a=>{const it=byId(String(a.id));if(!db||!it)throw new Error("unknown id");const ok=["status","mine","note","tag","score","when","cost","dist","link","name","date","time","fav","kind","rating","memory"];const p={},prev={};
+ {name:"update_item",description:"מעדכן פריט קיים לפי id. fields יכול לכלול: status (want/done/skip/''), mine, note, tag, score, when, cost, dist, link, tickets, name, date, time, fav (true/false), kind, rating (1-5), memory.",inputSchema:{type:"object",properties:{id:{type:"string"},fields:{type:"object"}},required:["id","fields"]},
+  execute:async a=>{const it=byId(String(a.id));if(!db||!it)throw new Error("unknown id");const ok=["status","mine","note","tag","score","when","cost","dist","link","tickets","name","date","time","fav","kind","rating","memory"];const p={},prev={};
    for(const k of ok)if(a.fields&&k in a.fields){p[k]=a.fields[k];prev[k]=it[k]??""}
    if(p.date&&!DAYS.includes(p.date))throw new Error("date מחוץ לטיול");if(p.status==="done")p.doneAt=new Date().toISOString();
    if(!Object.keys(p).length)throw new Error("אין שדות לעדכון");await save(it.id,p);curActs.push({t:"upd",id:it.id,name:it.name,prev,next:p});return{ok:true}}},
@@ -1286,7 +1300,7 @@ $("#ccIn").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&windo
 async function sendCC(t){if(!sample){toast("הקונסיירז' לא זמין כאן");return}if(busy){toast("רגע, עוד עונה על הקודמת");return}busy=true;$("#ccIn").value="";$("#ccIn").style.height="";$("#ccSend").disabled=true;
   chat=[...chat,{r:"u",t,at:new Date().toISOString()}];renderChat();persistChat();
   const{t:td,S,v}=ccContext();const nb=nowBKK();
-  const lite=items.map(i=>{const o={id:i.id,dest:i.dest,cat:i.cat,name:i.name,tag:i.tag,score:i.score,when:i.when,status:i.status};if(i.kind)o.kind=i.kind;if(i.date)o.date=i.date;if(i.time)o.time=i.time;if(i.fav)o.fav=true;if(i.mine)o.mine=i.mine;if(i.cost)o.cost=i.cost;if(i.dist)o.dist=i.dist;if(i.rating)o.rating=i.rating;if(i.memory)o.memory=i.memory;if(i.note&&(i.dest===(S||{}).k||i.dest==="all"))o.note=i.note;return o});
+  const lite=items.map(i=>{const o={id:i.id,dest:i.dest,cat:i.cat,name:i.name,tag:i.tag,score:i.score,when:i.when,status:i.status};if(i.kind)o.kind=i.kind;if(i.date)o.date=i.date;if(i.time)o.time=i.time;if(i.fav)o.fav=true;if(i.mine)o.mine=i.mine;if(i.cost)o.cost=i.cost;if(i.tickets)o.tickets=true;if(i.dist)o.dist=i.dist;if(i.rating)o.rating=i.rating;if(i.memory)o.memory=i.memory;if(i.note&&(i.dest===(S||{}).k||i.dest==="all"))o.note=i.note;return o});
   const days=DAYS.map(d=>`${d}=יום ${dayNo(d)} ${stopOf(d).k}`).join(", ");
   const hist=chat.slice(-12,-1).map(m=>(m.r==="u"?"משתמש: ":"סוכן: ")+m.t).join("\n");
   const notes=Object.entries(notesDocs).filter(([,n])=>n.text).map(([k,n])=>`${k}: ${n.text}`).join("\n");
