@@ -13,8 +13,10 @@ Its data lives in the artifact's shared database (`items/*`, `chat/log`, `notes/
 | `seed/items-preview.json` | Data seeded into the preview artifact: the 47 items plus optional `lat`/`lng` (approximate) and `date`/`time` where the item's own text named a single day. |
 
 Artifacts:
-- Live: https://claude.ai/artifact/32DF3vSdNT5ko6eKsaDi4J (original page, untouched)
-- Preview of the redesign: https://claude.ai/artifact/SbL5qXjkU29BLc6G31NstR (own database, seeded copy)
+- Live: https://claude.ai/artifact/32DF3vSdNT5ko6eKsaDi4J (runs app/index.html since 2026-11-21; the original page is in backup/live-page-2026-11-20)
+- Preview: https://claude.ai/artifact/SbL5qXjkU29BLc6G31NstR (own database, seeded copy, for testing)
+
+Photos: phuket-1 is from Wikimedia Commons (credited in the app's Settings); the other four were supplied by the trip owners.
 
 Data contract: every original field (`name dest cat tag score when cost dist note link status mine order updatedAt`)
 keeps its meaning. The redesign only adds optional fields: `kind date time dayOrder fav rating memory doneAt lat lng place ref`.
