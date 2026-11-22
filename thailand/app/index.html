@@ -398,6 +398,37 @@ main{display:block}
 .plain li{padding-block:13px}
 .st-mini.tix{background:var(--accent);color:var(--accent-ink);text-decoration:none}
 .st-mini.new{background:color-mix(in srgb,var(--sea) 16%,transparent);color:var(--sea)}
+.jtabs{margin:14px 0 4px}
+.jtabs .c{font:600 11.5px var(--f-display);opacity:.55;margin-inline-start:6px}
+.composer{display:flex;align-items:center;gap:14px;width:100%;margin-top:12px;padding:16px;background:var(--raise);border-radius:var(--r-l);box-shadow:var(--sh-2);text-align:start;border:1px dashed color-mix(in srgb,var(--brand) 35%,transparent);transition:transform .2s,box-shadow .2s}
+.composer:hover{box-shadow:var(--sh-3)}.composer:disabled{opacity:.5}
+.composer>svg{width:22px;height:22px;padding:10px;box-sizing:content-box;border-radius:14px;background:var(--brand);color:var(--brand-ink);flex:none}
+.composer b{display:block;font:600 17px/1.2 var(--f-display)}.composer small{font-size:13px;color:var(--ink-3)}
+.entry{background:var(--raise);border-radius:var(--r-l);box-shadow:var(--sh-2);overflow:hidden;margin-bottom:12px;cursor:pointer;transition:box-shadow .2s}
+.entry:hover{box-shadow:var(--sh-3)}
+.eph{display:grid;gap:2px;aspect-ratio:16/9}
+.eph.n2{grid-template-columns:1fr 1fr}.eph.n3{grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr}.eph.n3 img:first-child{grid-row:1/3}
+.eph img{width:100%;height:100%;object-fit:cover;display:block;min-height:0}
+.ebody{padding:14px 16px}
+.emeta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--ink-3)}
+.emeta .sp{flex:1}
+.emeta .vis{font-weight:600}
+.mood{font-weight:600;padding:3px 8px;border-radius:999px;background:var(--paper-2);color:var(--ink-2)}
+.mood.wild{background:var(--accent-2);color:var(--accent)}.mood.fun{background:var(--brand-2);color:var(--brand)}
+.erate{color:#F5A524;letter-spacing:1px}
+.entry h3{font:600 18px/1.25 var(--f-display);margin-top:8px}
+.entry p{font-size:15px;line-height:1.6;color:var(--ink-2);margin-top:4px;white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.moods{display:flex;gap:8px;flex-wrap:wrap}
+.moodpick input{position:absolute;opacity:0;pointer-events:none}
+.moodpick span{display:inline-flex;height:38px;align-items:center;padding:0 14px;border-radius:999px;border:1px solid var(--line-2);font-weight:600;color:var(--ink-2);cursor:pointer;transition:all .2s}
+.moodpick input:checked+span{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.moodpick input:focus-visible+span{outline:2px solid var(--brand);outline-offset:2px}
+.ephk{position:relative;flex:none}.ephk img{height:96px;width:auto;border-radius:12px;display:block}
+.ephk button{position:absolute;top:4px;inset-inline-end:4px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;display:grid;place-items:center}
+.ephk button svg{width:13px;height:13px}
+.sharerow{display:flex!important;grid-template-columns:none;align-items:center;gap:12px;padding:12px;background:var(--paper);border-radius:12px;cursor:pointer}
+.sharerow input{width:22px;height:22px;min-height:0;accent-color:var(--brand);flex:none}
+.sharerow b{display:block;color:var(--ink);font-size:15px}.sharerow small{font-weight:400;color:var(--ink-3)}
 .localsec{margin-top:30px;background:linear-gradient(160deg,var(--brand-2),var(--raise) 70%);border-radius:var(--r-l);padding:20px 18px;box-shadow:var(--sh-2)}
 .localsec .lh h3{font:700 24px/1.15 var(--f-display);letter-spacing:-.02em;margin-top:4px}
 .localsec .lh p{font-size:14.5px;color:var(--ink-2);margin-top:6px}
@@ -733,7 +764,7 @@ const STOPS=[
   hotel:{name:"Novotel Platinum Pratunam",area:"פרטונאם",lat:13.7503,lng:100.5394},
   line:"הארד טכנו, יאווראט בלילה ורופטופ לסיום.",box:[100.47,13.7,100.6,13.78]}];
 const TRIP={s:"2026-11-25",e:"2026-12-20"};
-const CATS=[["event","אירועים"],["night","חיי לילה"],["sea","חופים ושייט"],["extreme","אקסטרים וטבע"],["food","אוכל"],["shop","שופינג"],["move","תחבורה"],["book","להזמין"],["warn","שימו לב"],["spa","עיסוי וספא"],["local","אוכל מקומי"]];
+const CATS=[["event","אירועים"],["night","חיי לילה"],["sea","חופים ושייט"],["extreme","אקסטרים וטבע"],["food","אוכל"],["shop","שופינג"],["move","תחבורה"],["book","להזמין"],["warn","שימו לב"],["spa","עיסוי וספא"],["local","אוכל מקומי"],["prep","לפני הטיסה"]];
 const CATN=Object.fromEntries(CATS);
 const TAGS={"MUST":["חובה","MUST"],"HIGH":["מומלץ","HIGH"],"OPTIONAL":["אם יש זמן","OPTIONAL"],"HIDDEN GEM":["פנינה נסתרת","GEM"],"BACKUP":["גיבוי","BACKUP"]};
 const KINDS=[["activity","פעילות"],["meal","ארוחה"],["transport","תחבורה"],["booking","הזמנה"],["free","זמן חופשי"],["note","הערה"]];
@@ -774,6 +805,7 @@ const tagRank={"MUST":0,"HIGH":1,"HIDDEN GEM":2,"OPTIONAL":3,"BACKUP":4};
 /* =========================================================
    3. STATE
    ========================================================= */
+let myEntries=[],sharedEntries=[],uid=null,jtab=store.get("jtab","mine"),entryDraft=null;
 let items=[],photos=[],notesDocs={},chat=[],db=null,canWrite=true,sample=null,userNs=null,dict=null,downloads=null;
 let route="today",planDay=null,reorderMode=false,chFilter={cat:"all",q:"",st:""},mapState={region:"all",filter:"all",sel:null};
 const F={}; // per-render transient
@@ -885,10 +917,10 @@ function vToday(){
     <div class="hotelrow">${ico("i-pin")}<span>${bdi(S.hotel.name)} · ${bdi(S.hotel.area)}</span></div></div>${ph&&ph.src?`<span class="credit">${esc(ph.by)}</span>`:""}</section>`;
   let main="";
   if(pre){
-    const prep=items.filter(i=>(i.cat==="book"||i.cat==="warn")).sort((a,b)=>(a.status==="done")-(b.status==="done")||(tagRank[a.tag]??5)-(tagRank[b.tag]??5));
+    const prep=items.filter(i=>(i.cat==="prep"||i.cat==="book"||i.cat==="warn")).sort((a,b)=>(a.status==="done")-(b.status==="done")||(a.cat==="prep"?0:1)-(b.cat==="prep"?0:1)||(tagRank[a.tag]??5)-(tagRank[b.tag]??5)||(a.order??999)-(b.order??999));
     main=`<section class="sec"><div class="sec-h"><h2>לפני שטסים</h2><a class="more" href="#chapters">כל המדריך</a></div>
       <p class="lede">מה שצריך לסגור ולזכור לפני ה־25.11. מסמנים כאן, וזה מתעדכן גם אצל אופק.</p>
-      <ul class="checklist" style="margin-top:12px">${prep.map(i=>`<li class="${i.status==="done"?"li-done":""}">${doneBox(i)}<div><div class="ttl it-n" data-act="open" data-id="${esc(i.id)}">${bdi(i.name)}</div><div class="meta">${stopByK(i.dest)?stopByK(i.dest).n:"כל הטיול"}${i.when?" · "+bdi(i.when):""}</div></div>${tagHtml(i)}</li>`).join("")||`<li><span></span><div class="meta">אין משימות פתוחות.</div></li>`}</ul></section>
+      <ul class="checklist" style="margin-top:12px">${prep.map(i=>`<li class="${i.status==="done"?"li-done":""}">${doneBox(i)}<div><div class="ttl it-n" data-act="open" data-id="${esc(i.id)}">${bdi(i.name)}</div><div class="meta">${i.cat==="prep"?"לפני הטיסה":stopByK(i.dest)?stopByK(i.dest).n:"כל הטיול"}${i.when?" · "+bdi(i.when):""}</div>${safeUrl(i.tickets)?`<a class="st-mini tix" style="display:inline-block;margin-top:6px" href="${esc(i.tickets)}" target="_blank" rel="noopener">${i.cat==="prep"?"לאתר הרשמי ↗":"כרטיסים ↗"}</a>`:""}</div>${tagHtml(i)}</li>`).join("")||`<li><span></span><div class="meta">אין משימות פתוחות.</div></li>`}</ul></section>
       <section class="sec"><div class="sec-h"><h2>היום הראשון</h2><a class="more" href="#plan" data-act="gotoday" data-day="${TRIP.s}">למסלול</a></div>${dayTimeline(TRIP.s,{compact:true})}</section>`;
   }else if(post){
     main=`<section class="sec"><div class="sec-h"><h2>הטיול הסתיים</h2><a class="more" href="#journal">ליומן</a></div><p class="lede">כל מה שעשיתם, דירגתם וצילמתם מחכה ביומן.</p></section>`;
@@ -976,7 +1008,7 @@ function vChapters(){
 
 function vChapter(S){
   const t=today();const ix=STOPS.indexOf(S);const prev=STOPS[ix-1],next=STOPS[ix+1];
-  const all=itemsOf(S.k).concat(items.filter(i=>i.dest==="all"));
+  const all=itemsOf(S.k).concat(items.filter(i=>i.dest==="all"&&i.cat!=="prep"));
   const ds=DAYS.filter(d=>stopOf(d)===S);
   const filtering=chFilter.cat!=="all"||chFilter.q||chFilter.st;
   const q=chFilter.q.trim().toLowerCase();
@@ -1082,14 +1114,32 @@ function bindMap(svg,wrap){if(svg.dataset.bound)return;svg.dataset.bound=1;const
 /* =========================================================
    12. VIEW: JOURNAL
    ========================================================= */
+const MOODS=[["wild","מטורף"],["fun","כיף"],["chill","רגוע"],["meh","מאכזב"]];const MOODN=Object.fromEntries(MOODS);
+const allEntries=()=>[...myEntries.map(e=>({...e,shared:false})),...sharedEntries.map(e=>({...e,shared:true}))].sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.createdAt||"").localeCompare(a.createdAt||""));
 function vJournal(){
+  const t=today();const E=allEntries();
+  const tabs=`<div class="seg3 jtabs" role="tablist" aria-label="היומן"><button type="button" role="tab" data-act="jtab" data-t="mine" aria-pressed="${jtab==="mine"}">הרשומות שלי<span class="c">${E.length||""}</span></button><button type="button" role="tab" data-act="jtab" data-t="done" aria-pressed="${jtab==="done"}">מה שסימנו<span class="c">${items.filter(i=>i.status==="done").length||""}</span></button></div>`;
+  if(jtab==="mine"){
+    const head=`<header class="jhead"><div class="eyebrow">אביב ואופק · ${fShort(TRIP.s)}–${fShort(TRIP.e)}</div><h1>היומן</h1><p class="lede">המקום האישי שלכם לתעד את הטיול: מה קרה, איך היה, תמונות. רשומה פרטית נראית רק לך; אפשר לשתף אותה עם אופק.</p></header>${tabs}`;
+    const compose=`<button class="composer" type="button" data-act="newentry">${ico("i-plus")}<span><b>מה קרה היום?</b><small>רשומה חדשה ביומן – טקסט, תמונות, דירוג</small></span></button>`;
+    if(!db||!uid)return head+compose.replace('data-act="newentry"','data-act="newentry" disabled')+`<div class="empty" style="margin-top:14px"><h3>היומן האישי זמין כשהדף פתוח מחובר</h3><p>פתחו את הדף ב־claude.ai עם החשבון שלכם כדי לכתוב ולשמור רשומות.</p></div>`;
+    if(!E.length)return head+compose+`<div class="empty" style="margin-top:14px"><h3>${t<TRIP.s?"עוד לא נחתתם":"עוד אין רשומות"}</h3><p>אחרי יום טוב, מסיבה או ארוחה שווה – שתי שורות ותמונה. בסוף הטיול זה יהיה הסיפור שלכם.</p></div>`;
+    const groups={};E.forEach(e=>{(groups[e.date||"undated"]=groups[e.date||"undated"]||[]).push(e)});
+    return head+compose+Object.keys(groups).sort().reverse().map(d=>`<section class="jday"><h3>${d==="undated"?"בלי תאריך":fDay(d)}${DAYS.includes(d)?`<span class="mono">יום ${dayNo(d)}</span>`:""}</h3>${groups[d].map(entryCard).join("")}</section>`).join("")}
+  return vJournalDone(tabs)}
+function entryCard(e){const S=stopByK(e.dest);const ph=e.photos||[];
+  return `<article class="entry" data-act="editentry" data-eid="${esc(e.id)}" data-shared="${e.shared?1:0}" role="button" tabindex="0">
+   ${ph.length?`<div class="eph n${Math.min(ph.length,3)}">${ph.slice(0,3).map(u=>`<img src="${esc(u)}" alt="" loading="lazy">`).join("")}</div>`:""}
+   <div class="ebody"><div class="emeta">${S?`<span>${S.n}</span>`:""}${e.mood?`<span class="mood ${esc(e.mood)}">${MOODN[e.mood]||""}</span>`:""}${e.rating?`<span class="erate">${"★".repeat(e.rating)}</span>`:""}<span class="sp"></span><span class="vis">${e.shared?(e.author===uid?"משותף עם אופק":"מאופק"):"פרטי"}</span></div>
+   ${e.title?`<h3>${bdi(e.title)}</h3>`:""}${e.text?`<p>${bdi(e.text)}</p>`:""}</div></article>`}
+function vJournalDone(tabs){
   const t=today();const done=items.filter(i=>i.status==="done");const fav=items.filter(i=>i.fav).length;
   const daysIn=t<TRIP.s?0:t>TRIP.e?26:dayNo(t);
   const jf=store.get("jf","all");const list=done.filter(i=>jf==="all"||(jf==="fav"&&i.fav)||(jf==="rated"&&i.rating));
   const groups={};list.forEach(i=>{const d=i.date||(i.doneAt?i.doneAt.slice(0,10):"")||"undated";(groups[d]=groups[d]||[]).push(i)});
   const keys=Object.keys(groups).sort().reverse();
   const head=`<header class="jhead"><div class="eyebrow">אביב ואופק · ${fShort(TRIP.s)}–${fShort(TRIP.e)}</div><h1>היומן</h1><p class="lede">מה שבאמת קרה. מסמנים "עשינו" בכל מקום באפליקציה, וכאן מוסיפים דירוג, כמה מילים ותמונות.</p>
-   <div class="jstats"><div><b>${daysIn}</b><small>ימים בדרך</small></div><div><b>${done.length}</b><small>חוויות</small></div><div><b>${fav}</b><small>מועדפים</small></div><div><b>${photos.length}</b><small>תמונות</small></div></div></header>
+   ${tabs}<div class="jstats"><div><b>${daysIn}</b><small>ימים בדרך</small></div><div><b>${done.length}</b><small>חוויות</small></div><div><b>${fav}</b><small>מועדפים</small></div><div><b>${photos.length}</b><small>תמונות</small></div></div></header>
    <div class="filters" style="margin-top:14px" role="group" aria-label="סינון היומן">${[["all","הכול"],["fav","מועדפים"],["rated","עם דירוג"]].map(([k,n])=>`<button class="chip" type="button" data-act="jf" data-f="${k}" aria-pressed="${jf===k}">${n}</button>`).join("")}</div>`;
   if(!done.length)return head+`<div class="empty" style="margin-top:18px"><h3>${t<TRIP.s?"היומן נפתח ב־25.11":"עוד אין רשומות"}</h3><p>${t<TRIP.s?"כשתסמנו את החוויה הראשונה כבוצעה, היא תופיע כאן עם מקום לדירוג, זיכרון ותמונות.":"סמנו פעילות כבוצעה מהמסלול או מהמדריך, והיא תופיע כאן."}</p><div class="acts"><a class="btn sm" href="#plan">למסלול</a></div></div>`;
   return head+keys.map(d=>`<section class="jday"><h3>${d==="undated"?"בלי תאריך":fDay(d)}${d!=="undated"&&DAYS.includes(d)?`<span class="mono">יום ${dayNo(d)}</span>`:""}</h3>${groups[d].map(jEntry).join("")}</section>`).join("")}
@@ -1158,6 +1208,34 @@ function openEditor(it,preset={}){const v=it||{dest:route&&stopByK(route)?route:
     closeSheet();
     if(it){await save(it.id,val);toast("נשמר")}else{const id=await createItem(val);if(id)toast("נוסף",`פתיחה`,()=>openItem(id))}
     render()})})}
+function openEntry(e){if(!uid){toast("היומן האישי זמין כשהדף פתוח מחובר");return}
+  const t=today();const def=DAYS.includes(t)?t:t<TRIP.s?TRIP.s:TRIP.e;
+  entryDraft={id:e?e.id:null,wasShared:e?!!e.shared:false,photos:[...(e&&e.photos||[])]};
+  const v=e||{date:def,shared:false};
+  openSheet(e?"עריכת רשומה":"רשומה חדשה",`<form class="ed" id="entForm" novalidate>
+   <h2>${e?"עריכת רשומה":"מה קרה היום?"}</h2>
+   <label>כותרת<input name="title" dir="auto" value="${esc(v.title||"")}" placeholder="למשל: הלילה בהאלפמון" autofocus></label>
+   <label>מה קרה<textarea name="text" rows="5" dir="auto" placeholder="איך היה, עם מי, מה לא נשכח…">${esc(v.text||"")}</textarea></label>
+   <div class="grid2"><label>תאריך<select name="date">${DAYS.map(d=>`<option value="${d}" ${v.date===d?"selected":""}>יום ${dayNo(d)} · ${fShort(d)} · ${stopOf(d).n}</option>`).join("")}</select></label>
+   <label>דירוג<select name="rating"><option value="">בלי</option>${[5,4,3,2,1].map(n=>`<option value="${n}" ${v.rating===n?"selected":""}>${"★".repeat(n)}</option>`).join("")}</select></label></div>
+   <fieldset><legend>איך היה</legend><div class="moods" role="radiogroup">${MOODS.map(([k,n])=>`<label class="moodpick"><input type="radio" name="mood" value="${k}" ${v.mood===k?"checked":""}><span>${n}</span></label>`).join("")}</div></fieldset>
+   <fieldset><legend>תמונות</legend><div class="photos" id="entPh"></div><span class="hint">עד 3 תמונות, נשמרות מוקטנות</span></fieldset>
+   <label class="sharerow"><input type="checkbox" name="shared" ${v.shared?"checked":""}><span><b>לשתף עם אופק</b><small>בלי סימון – הרשומה פרטית ורק את/ה רואה אותה</small></span></label>
+   <div class="formacts"><button class="btn" type="submit">שמירה</button><button class="btn ghost" type="button" data-act="closesheet">ביטול</button>${e?`<span class="sp" style="flex:1"></span><button class="danger-link" type="button" data-act="delentry">מחיקה</button>`:""}</div></form>`,()=>{
+   renderEntPhotos();
+   $("#entForm").addEventListener("submit",async ev=>{ev.preventDefault();const f=ev.target;
+    const doc={kind:"entry",title:f.title.value.trim(),text:f.text.value.trim(),date:f.date.value,dest:(stopOf(f.date.value)||{}).k||"",mood:(f.mood.value||""),rating:f.rating.value?+f.rating.value:0,photos:entryDraft.photos,author:uid,updatedAt:new Date().toISOString()};
+    if(!doc.title&&!doc.text&&!doc.photos.length){toast("כתבו משהו או הוסיפו תמונה");return}
+    if(JSON.stringify(doc).length>250000){toast("התמונות גדולות מדי – הסירו אחת");return}
+    const shared=f.shared.checked;const id=entryDraft.id||db.collection("entries").doc().id;
+    const coll=shared?"entries":"data/users/"+uid;
+    try{const old=e&&e.createdAt;await db.collection(coll).doc(id).set({...doc,createdAt:old||doc.updatedAt});
+      if(entryDraft.id&&entryDraft.wasShared!==shared)await db.collection(entryDraft.wasShared?"entries":"data/users/"+uid).doc(id).delete();
+      closeSheet();toast(e?"הרשומה עודכנה":"נשמר ביומן")}catch(err){toast("השמירה נכשלה. נסו שוב.")}})})}
+function renderEntPhotos(){const box=$("#entPh");if(!box)return;box.innerHTML=entryDraft.photos.map((u,i)=>`<span class="ephk"><img src="${esc(u)}" alt=""><button type="button" data-act="rmentph" data-i="${i}" aria-label="הסרת תמונה">${ico("i-x")}</button></span>`).join("")+(entryDraft.photos.length<3?`<button class="addphoto" type="button" data-act="addentph">${ico("i-cam")}תמונה</button>`:"")}
+async function deleteEntry(){const id=entryDraft&&entryDraft.id;if(!id)return;const coll=entryDraft.wasShared?"entries":"data/users/"+uid;
+  const e=allEntries().find(x=>x.id===id);closeSheet();if(!e)return;const copy={...e};delete copy.id;delete copy.shared;
+  try{await db.collection(coll).doc(id).delete();toast("הרשומה נמחקה","ביטול",()=>db.collection(coll).doc(id).set(copy))}catch(err){toast("המחיקה נכשלה")}}
 function parseGeo(s){s=String(s||"");const m=s.match(/@?(-?\d{1,2}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)/);if(!m)return null;const a=+m[1],b=+m[2];if(a<-90||a>90||b<-180||b>180)return null;return[a,b]}
 function openQuick(){openSheet("הוספה מהירה",`<div class="qgrid">
    <button type="button" data-act="new" data-kind="activity">${ico("i-sun")}<b>פעילות</b><small>חוויה, אטרקציה, מסיבה</small></button>
@@ -1214,6 +1292,12 @@ async function handleAct(el,e){const a=el.dataset.act,id=el.dataset.id;
    case "hotel":{const s=stopByK(el.dataset.k);if(mapState.region==="all"){mapState.region=s.k;MV=null;render()}else go(s.k);break}
    case "showonmap":{const it=byId(id);closeSheet();mapState.region=it.dest==="all"?"all":it.dest;mapState.sel=id;mapState.filter="all";MV=null;go("map");break}
    case "jf":store.set("jf",el.dataset.f);render();break;
+   case "jtab":jtab=el.dataset.t;store.set("jtab",jtab);render();break;
+   case "newentry":openEntry(null);break;
+   case "editentry":{const e=allEntries().find(x=>x.id===el.dataset.eid&&(x.shared?1:0)==+el.dataset.shared);if(e&&(!e.shared||e.author===uid))openEntry(e);else if(e)toast("את הרשומה הזו כתב אופק");break}
+   case "delentry":deleteEntry();break;
+   case "addentph":pendingEntryPhoto=true;$("#photoIn").click();break;
+   case "rmentph":entryDraft.photos.splice(+el.dataset.i,1);renderEntPhotos();break;
    case "rate":{const n=+el.dataset.n;const it=byId(id);await save(id,{rating:it.rating===n?0:n});render();break}
    case "addphoto":pendingPhoto=id;$("#photoIn").click();break;
    case "photo":{const p=photos.find(x=>x.id===el.dataset.pid);if(p)openSheet("תמונה",`<img src="${esc(p.data)}" alt="" style="width:100%;border-radius:2px"><p class="dactions"><button class="danger-link" type="button" data-act="delphoto" data-pid="${esc(p.id)}">מחיקת התמונה</button></p>`);break}
@@ -1237,8 +1321,10 @@ document.addEventListener("focusout",e=>{const t=e.target;
   if(t.dataset.mine){const it=byId(t.dataset.mine);if(it&&(it.mine||"")!==t.value)save(it.id,{mine:t.value}).then(ok=>ok&&toast("ההערה נשמרה"))}
   if(t.dataset.mem){const it=byId(t.dataset.mem);if(it&&(it.memory||"")!==t.value)save(it.id,{memory:t.value}).then(ok=>ok&&toast("נשמר ביומן"))}});
 async function saveNote(k,text){if(!db||!canWrite)return;try{await db.doc("notes/"+k).set({text,updatedAt:new Date().toISOString()});const el=$("#noteInd");if(el)el.textContent="נשמר"}catch(e){const el=$("#noteInd");if(el)el.textContent="השמירה נכשלה"}}
-let pendingPhoto=null;
-$("#photoIn").addEventListener("change",async e=>{const f=e.target.files[0];e.target.value="";if(!f||!pendingPhoto||!db)return;
+let pendingPhoto=null,pendingEntryPhoto=false;
+$("#photoIn").addEventListener("change",async e=>{const f=e.target.files[0];e.target.value="";
+  if(f&&pendingEntryPhoto){pendingEntryPhoto=false;try{entryDraft.photos.push(await shrink(f,720,.62));renderEntPhotos()}catch(err){toast("לא הצלחתי לקרוא את התמונה")}return}
+  if(!f||!pendingPhoto||!db)return;
   try{toast("מעלה תמונה…");const data=await shrink(f,1100,.74);if(data.length>240000){toast("התמונה גדולה מדי");return}
    await db.collection("photos").doc().set({item:pendingPhoto,data,at:new Date().toISOString()});toast("התמונה נשמרה ביומן")}catch(err){toast("לא הצלחתי לשמור את התמונה")}});
 function shrink(file,max,q){return new Promise((res,rej)=>{const img=new Image();const u=URL.createObjectURL(file);img.onload=()=>{const k=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement("canvas");c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext("2d").drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);let d=c.toDataURL("image/jpeg",q);if(d.length>240000)d=c.toDataURL("image/jpeg",.55);res(d)};img.onerror=rej;img.src=u})}
@@ -1303,8 +1389,9 @@ async function sendCC(t){if(!sample){toast("הקונסיירז' לא זמין כ
   const lite=items.map(i=>{const o={id:i.id,dest:i.dest,cat:i.cat,name:i.name,tag:i.tag,score:i.score,when:i.when,status:i.status};if(i.kind)o.kind=i.kind;if(i.date)o.date=i.date;if(i.time)o.time=i.time;if(i.fav)o.fav=true;if(i.mine)o.mine=i.mine;if(i.cost)o.cost=i.cost;if(i.tickets)o.tickets=true;if(i.dist)o.dist=i.dist;if(i.rating)o.rating=i.rating;if(i.memory)o.memory=i.memory;if(i.note&&(i.dest===(S||{}).k||i.dest==="all"))o.note=i.note;return o});
   const days=DAYS.map(d=>`${d}=יום ${dayNo(d)} ${stopOf(d).k}`).join(", ");
   const hist=chat.slice(-12,-1).map(m=>(m.r==="u"?"משתמש: ":"סוכן: ")+m.t).join("\n");
+  const jr=allEntries().slice(0,15).map(e=>`${e.date} ${e.title||""}: ${(e.text||"").slice(0,140)}${e.mood?` (${MOODN[e.mood]})`:""}`).join("\n");
   const notes=Object.entries(notesDocs).filter(([,n])=>n.text).map(([k,n])=>`${k}: ${n.text}`).join("\n");
-  const input=`${AGENT}\n\nזמן מקומי בתאילנד: ${simDate?td+" (תצוגה מדומה)":nb.date} ${nb.time}. ${S?`היום הוא יום ${dayNo(td)} מתוך 26, ב${S.n}.`:td<TRIP.s?`הטיול מתחיל בעוד ${diffDays(td,TRIP.s)} ימים.`:"הטיול הסתיים."}\nהמשתמש נמצא ב: ${v}.\nימי הטיול: ${days}\n${notes?`הפנקסים לפי יעד:\n${notes}\n`:""}המאגר (JSON):\n${JSON.stringify(lite)}\n\nהשיחה עד עכשיו:\n${hist||"(אין)"}\n\nההודעה החדשה: ${t}`;
+  const input=`${AGENT}\n\nזמן מקומי בתאילנד: ${simDate?td+" (תצוגה מדומה)":nb.date} ${nb.time}. ${S?`היום הוא יום ${dayNo(td)} מתוך 26, ב${S.n}.`:td<TRIP.s?`הטיול מתחיל בעוד ${diffDays(td,TRIP.s)} ימים.`:"הטיול הסתיים."}\nהמשתמש נמצא ב: ${v}.\nימי הטיול: ${days}\n${notes?`הפנקסים לפי יעד:\n${notes}\n`:""}${jr?`מהיומן שלהם:\n${jr}\n`:""}המאגר (JSON):\n${JSON.stringify(lite)}\n\nהשיחה עד עכשיו:\n${hist||"(אין)"}\n\nההודעה החדשה: ${t}`;
   const live={r:"a",t:"חושב",think:true,acts:[]};chat=[...chat,live];curActs=live.acts;renderChat();
   try{const res=await sample(input,{cache:false,tools:ccTools,onText:({text})=>{live.think=false;live.t=text;renderChat()}});live.t=res.text||live.t;live.think=false}
   catch(err){live.think=false;live.t=err&&err.text?err.text:err&&err.code==="rate_limited"?"יותר מדי בקשות. נסו שוב בעוד דקה.":err&&err.code==="not_granted"?"הקונסיירז' לא אושר בדף הזה. אפשר לאשר בתפריט ההרשאות של הדף.":"משהו נכשל. נסו שוב."}
@@ -1332,6 +1419,9 @@ route=readHash();render(true);
     db.collection("items").onSnapshot(s=>{items=s.docs.map(d=>({id:d.id,...d.data()}));if(!s.metadata.fromCache){clearTimeout(timer);synced=true;status(canWrite?"מסונכרן":"צפייה בלבד","live")}
       const ae=document.activeElement;const typing=ae&&(ae.tagName==="TEXTAREA"||ae.tagName==="INPUT")&&$("#main").contains(ae)&&ae.id!=="chq";if(!typing)render();if(sheetOn&&$("#sheetBody .detail h2")&&F.openId){} if(ccOn)renderChat();
       document.querySelectorAll("[data-minimap]").forEach(drawMini)},e=>{clearTimeout(timer);status("החיבור נפל – רעננו","err")});
+    try{uid=userNs&&userNs.id?await userNs.id():null}catch(e){uid=null}
+    if(uid)db.collection("data/users/"+uid).onSnapshot(s=>{myEntries=s.docs.map(d=>({id:d.id,...d.data()})).filter(d=>d.kind==="entry");if(route==="journal")render()},()=>{});
+    db.collection("entries").onSnapshot(s=>{sharedEntries=s.docs.map(d=>({id:d.id,...d.data()})).filter(d=>d.kind==="entry");if(route==="journal")render()},()=>{});
     db.collection("photos").onSnapshot(s=>{photos=s.docs.map(d=>({id:d.id,...d.data()}));if(route==="journal")render()},()=>{});
     db.collection("notes").onSnapshot(s=>{notesDocs=Object.fromEntries(s.docs.map(d=>[d.id,d.data()]));const ta=$("#chnote");if(ta&&document.activeElement!==ta){const k=ta.dataset.k;ta.value=(notesDocs[k]||{}).text||""}},()=>{});
     db.doc("chat/log").onSnapshot(s=>{if(busy)return;chat=(s.exists&&s.data().messages)||[];if(ccOn)renderChat()},()=>{});
