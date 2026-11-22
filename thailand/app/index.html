@@ -494,7 +494,7 @@ form.ed .amt input{font:700 30px/1 var(--f-display);height:62px;text-align:right
 .fcard .btn{justify-self:start}
 .docgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
 .docth{background:var(--raise);border-radius:var(--r-m);box-shadow:var(--sh-2);overflow:hidden;text-align:start}.docth img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#fff}.docth span{display:block;padding:8px 10px;font-size:13.5px;font-weight:600}
-.tdquick{display:flex;align-items:center;gap:12px;width:100%;margin-top:12px;padding:12px 14px;background:var(--raise);border-radius:var(--r-l);box-shadow:var(--sh-2);text-align:start;border:1px solid color-mix(in srgb,var(--brand) 30%,transparent)}
+.tdquick{text-decoration:none;display:flex;align-items:center;gap:12px;width:100%;margin-top:12px;padding:12px 14px;background:var(--raise);border-radius:var(--r-l);box-shadow:var(--sh-2);text-align:start;border:1px solid color-mix(in srgb,var(--brand) 30%,transparent)}
 .jtabs{margin:14px 0 4px}
 .jtabs .c{font:600 11.5px var(--f-display);opacity:.55;margin-inline-start:6px}
 .composer{display:flex;align-items:center;gap:14px;width:100%;margin-top:12px;padding:16px;background:var(--raise);border-radius:var(--r-l);box-shadow:var(--sh-2);text-align:start;border:1px dashed color-mix(in srgb,var(--brand) 35%,transparent);transition:transform .2s,box-shadow .2s}
@@ -1041,7 +1041,8 @@ function vToday(){
   const nxt=pre?STOPS[0]:STOPS[STOPS.indexOf(S)+1];
   const nextHtml=nxt&&!post?`<a class="next" href="#${nxt.k}"><div class="plate" data-plate="${nxt.k}" role="img" aria-label="${nxt.n}"></div><div><div class="eyebrow">${pre?"הפרק הראשון":"הפרק הבא"} · <span class="mono">${fShort(nxt.s)}</span></div><h3>${nxt.n}</h3><p>${bdi(nxt.hotel.name)} · ${diffDays(t,nxt.s)>0?`בעוד ${diffDays(t,nxt.s)} ימים`:"היום"}</p></div><span class="go">${ico("i-next")}</span></a>`:"";
   const td=myDocs.find(d=>d.type==="tdac");const showTd=td&&(!td.arrival||t<=addDays(td.arrival,1));
-  const tdBar=showTd?`<button class="tdquick" type="button" data-act="viewdoc" data-did="${esc(td.id)}"><span class="ti green">${ico("i-lock")}</span><span class="tt"><b>כרטיס הכניסה מוכן להצגה</b><small>TDAC <bdi dir="ltr">${esc(td.number||"")}</bdi> · לחיצה לפתיחה</small></span>${ico("i-next","chev")}</button>`:"";
+  const tds=myDocs.filter(d=>d.type==="tdac");
+  const tdBar=showTd?(tds.length>1?`<a class="tdquick" href="#docs"><span class="ti green">${ico("i-lock")}</span><span class="tt"><b>כרטיסי הכניסה מוכנים להצגה</b><small>${tds.map(d=>esc((d.name||"").split(" ")[0])).join(" · ")} · TDAC</small></span>${ico("i-next","chev")}</a>`:`<button class="tdquick" type="button" data-act="viewdoc" data-did="${esc(td.id)}"><span class="ti green">${ico("i-lock")}</span><span class="tt"><b>כרטיס הכניסה מוכן להצגה</b><small>TDAC <bdi dir="ltr">${esc(td.number||"")}</bdi> · לחיצה לפתיחה</small></span>${ico("i-next","chev")}</button>`):"";
   return `${hero}${tdBar}${progressHtml()}
    <div class="twocol"><div>${main}</div><aside>
     <section class="sec"><div class="sec-h"><h2>${pre?"היעד הראשון":"מה הלאה"}</h2></div>${nextHtml||'<p class="lede">זה הפרק האחרון.</p>'}</section>
