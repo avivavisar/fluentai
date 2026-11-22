@@ -468,6 +468,20 @@ form.ed .amt input{font:700 30px/1 var(--f-display);height:62px;text-align:right
 .segpick input:focus-visible+span{outline:2px solid var(--brand)}
 @media (min-width:760px){.mgrid{grid-template-columns:1fr 1fr;gap:0 24px}}
 @media (min-width:1080px){.nav li.deskonly{display:block!important}.topbar a[data-nav="tools"]{display:none}}
+.tdac{margin-top:14px;background:var(--raise);border-radius:var(--r-l);box-shadow:var(--sh-2);padding:16px}
+.tdh{display:flex;gap:12px;align-items:center}.tdh b{display:block;font:600 16px/1.25 var(--f-display)}.tdh small{font-size:13px;color:var(--ink-3)}
+.tdimg{display:block;width:100%;margin-top:14px;background:#fff;border-radius:12px;border:1px solid var(--line);overflow:hidden;padding:6px}
+.tdimg img{display:block;width:100%;height:auto}
+.tdno{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px 12px;background:var(--paper);border-radius:12px}
+.tdno span{font-size:13px;color:var(--ink-3)}.tdno b{flex:1;font:700 22px/1 var(--f-display);letter-spacing:.06em;text-align:end}
+.tdno .cp{width:36px;height:36px;border-radius:10px;background:var(--raise)}.tdno .cp svg{width:17px;height:17px}
+.docview{display:grid;gap:12px}.docview img{width:100%;height:auto;background:#fff;border-radius:12px;border:1px solid var(--line)}
+.docview .bigqr{width:min(78%,340px);justify-self:center;border:0;border-radius:16px;image-rendering:pixelated;box-shadow:var(--sh-2)}
+.bigno small{display:block;margin-top:6px;font-size:13px;color:#555}
+.bigno{background:#fff;color:#000;border-radius:12px;padding:14px;text-align:center;border:1px solid var(--line)}.bigno span{display:block;font-size:13px;color:#555}.bigno b{display:block;font:700 40px/1.1 var(--f-display);letter-spacing:.08em;margin-top:4px}
+.docgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.docth{background:var(--raise);border-radius:var(--r-m);box-shadow:var(--sh-2);overflow:hidden;text-align:start}.docth img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#fff}.docth span{display:block;padding:8px 10px;font-size:13.5px;font-weight:600}
+.tdquick{display:flex;align-items:center;gap:12px;width:100%;margin-top:12px;padding:12px 14px;background:var(--raise);border-radius:var(--r-l);box-shadow:var(--sh-2);text-align:start;border:1px solid color-mix(in srgb,var(--brand) 30%,transparent)}
 .jtabs{margin:14px 0 4px}
 .jtabs .c{font:600 11.5px var(--f-display);opacity:.55;margin-inline-start:6px}
 .composer{display:flex;align-items:center;gap:14px;width:100%;margin-top:12px;padding:16px;background:var(--raise);border-radius:var(--r-l);box-shadow:var(--sh-2);text-align:start;border:1px dashed color-mix(in srgb,var(--brand) 35%,transparent);transition:transform .2s,box-shadow .2s}
@@ -761,6 +775,7 @@ form.ed legend{font:600 15px/1 var(--f-display);padding:0;margin-bottom:4px;floa
     <symbol id="i-sos" viewBox="0 0 24 24"><path d="M12 3.5 20.5 19h-17zM12 10v4M12 16.5h.01" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6zM9 8V6.5a3 3 0 0 1 6 0V8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
     <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M16 8V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
     <symbol id="i-seal" viewBox="0 0 24 24"><path d="M12 2.5c.6 3.7 2.8 6.4 6.6 7.3-3.8.9-6 3.6-6.6 7.3-.6-3.7-2.8-6.4-6.6-7.3 3.8-.9 6-3.6 6.6-7.3z" fill="currentColor"/><path d="M18.5 15.5c.25 1.5 1.1 2.5 2.6 2.8-1.5.3-2.35 1.3-2.6 2.8-.25-1.5-1.1-2.5-2.6-2.8 1.5-.3 2.35-1.3 2.6-2.8z" fill="currentColor" opacity=".7"/></symbol>
   </defs>
 </svg>
@@ -881,7 +896,7 @@ const tagRank={"MUST":0,"HIGH":1,"HIDDEN GEM":2,"OPTIONAL":3,"BACKUP":4};
 /* =========================================================
    3. STATE
    ========================================================= */
-let myEntries=[],sharedEntries=[],uid=null,jtab=store.get("jtab","mine"),entryDraft=null;
+let myDocs=[],myEntries=[],sharedEntries=[],uid=null,jtab=store.get("jtab","mine"),entryDraft=null;
 let items=[],photos=[],notesDocs={},chat=[],db=null,canWrite=true,sample=null,userNs=null,dict=null,downloads=null;
 let route="today",planDay=null,reorderMode=false,chFilter={cat:"all",q:"",st:""},mapState={region:"all",filter:"all",sel:null};
 const F={}; // per-render transient
@@ -923,7 +938,7 @@ async function toggleFav(id){const it=byId(id);if(!it)return;await save(id,{fav:
 /* =========================================================
    6. ROUTER + RENDER
    ========================================================= */
-const ROUTES=["today","plan","chapters","map","journal","tools","money","bookings","emergency","packing"];const TOOLR=["tools","money","bookings","emergency","packing"];
+const ROUTES=["today","plan","chapters","map","journal","tools","money","bookings","emergency","packing","docs"];const TOOLR=["tools","money","bookings","emergency","packing","docs"];
 function readHash(){const h=location.hash.slice(1);if(ROUTES.includes(h)||stopByK(h))return h;return "today"}
 function go(h){if(location.hash.slice(1)===h){render(true)}else location.hash=h}
 window.addEventListener("hashchange",()=>{route=readHash();render(true)});
@@ -935,7 +950,7 @@ function render(nav){
   document.querySelectorAll("[data-nav]").forEach(a=>a.setAttribute("aria-current",a.dataset.nav===navKey?"page":"false"));
   let html="";
   if(route==="today")html=vToday();else if(route==="plan")html=vPlan();else if(route==="chapters")html=vChapters();
-  else if(route==="map")html=vMap();else if(route==="journal")html=vJournal();else if(route==="tools")html=vTools();else if(route==="money")html=vMoney();else if(route==="bookings")html=vBookings();else if(route==="emergency")html=vEmergency();else if(route==="packing")html=vPacking();else html=vChapter(stopByK(route));
+  else if(route==="map")html=vMap();else if(route==="journal")html=vJournal();else if(route==="tools")html=vTools();else if(route==="money")html=vMoney();else if(route==="bookings")html=vBookings();else if(route==="emergency")html=vEmergency();else if(route==="packing")html=vPacking();else if(route==="docs")html=vDocs();else html=vChapter(stopByK(route));
   const keepFocus=document.activeElement&&main.contains(document.activeElement)&&document.activeElement.id?document.activeElement.id:null;
   const selStart=keepFocus&&document.activeElement.selectionStart;
   main.innerHTML=`<div class="view" ${nav?"":'style="animation:none"'}>${html}</div>`;main.dataset.route=route;
@@ -1012,7 +1027,9 @@ function vToday(){
   }
   const nxt=pre?STOPS[0]:STOPS[STOPS.indexOf(S)+1];
   const nextHtml=nxt&&!post?`<a class="next" href="#${nxt.k}"><div class="plate" data-plate="${nxt.k}" role="img" aria-label="${nxt.n}"></div><div><div class="eyebrow">${pre?"הפרק הראשון":"הפרק הבא"} · <span class="mono">${fShort(nxt.s)}</span></div><h3>${nxt.n}</h3><p>${bdi(nxt.hotel.name)} · ${diffDays(t,nxt.s)>0?`בעוד ${diffDays(t,nxt.s)} ימים`:"היום"}</p></div><span class="go">${ico("i-next")}</span></a>`:"";
-  return `${hero}${progressHtml()}
+  const td=myDocs.find(d=>d.type==="tdac");const showTd=td&&(!td.arrival||t<=addDays(td.arrival,1));
+  const tdBar=showTd?`<button class="tdquick" type="button" data-act="viewdoc" data-did="${esc(td.id)}"><span class="ti green">${ico("i-lock")}</span><span class="tt"><b>כרטיס הכניסה מוכן להצגה</b><small>TDAC <bdi dir="ltr">${esc(td.number||"")}</bdi> · לחיצה לפתיחה</small></span>${ico("i-next","chev")}</button>`:"";
+  return `${hero}${tdBar}${progressHtml()}
    <div class="twocol"><div>${main}</div><aside>
     <section class="sec"><div class="sec-h"><h2>${pre?"היעד הראשון":"מה הלאה"}</h2></div>${nextHtml||'<p class="lede">זה הפרק האחרון.</p>'}</section>
     <section class="sec"><div class="sec-h"><h2>על המפה</h2><a class="more" href="#map" data-act="mapregion" data-r="${S.k}">פתיחה</a></div><a class="mapthumb" href="#map" data-act="mapregion" data-r="${S.k}">${miniMap(S.k)}<span class="lbl">${S.n} · ${itemsOf(S.k).filter(i=>i.lat).length} מקומות</span></a></section>
@@ -1256,6 +1273,7 @@ function vTools(){const tot=sumOf(expenses);const missing=STOPS.filter(s=>!(book
   const pk=packing.length?`${packing.filter(p=>p.done).length} מתוך ${packing.length} ארוזים`:"רשימה מוכנה – לחצו לטעינה";
   return `<header class="thead"><h1>כלים</h1><p class="lede">מה שצריך בדרך, כל דבר במקום משלו.</p></header>${converterHtml()}
   <ul class="tools">
+   ${toolRow("docs","i-lock","המסמכים שלי",myDocs.length?`${myDocs.map(d=>esc(d.type==="tdac"?"TDAC":d.title)).join(" · ")} · פרטי, רק לך`:"אישורי כניסה וצילומי מסמכים · פרטי","green")}
    ${toolRow("money","i-wallet","הוצאות",tot?`${thb(tot)} עד עכשיו · ${balanceText()}`:"רישום מהיר וחלוקה ביניכם","green")}
    ${toolRow("bookings","i-ticket","הזמנות",missing?`${missing} מלונות בלי מספר אישור`:"כל המלונות עם מספר אישור","sea")}
    ${toolRow("emergency","i-sos","חירום","משטרת תיירים, בתי חולים, שגרירות","red")}
@@ -1354,6 +1372,23 @@ function vPacking(){const done=packing.filter(p=>p.done).length;
 document.addEventListener("submit",async e=>{const f=e.target;if(!f.classList||!f.classList.contains("padd"))return;e.preventDefault();const n=f.n.value.trim();if(!n||!db)return;
   try{await db.collection("packing").doc().set({name:n,group:f.dataset.g,done:false,order:Date.now()});f.n.value=""}catch(err){toast("השמירה נכשלה")}});
 async function seedPacking(){if(!db||!canWrite)return;let o=0;try{for(const[g,L]of Object.entries(PACK_DEFAULT))for(const n of L)await db.collection("packing").doc().set({name:n,group:g,done:false,order:o++});toast("הרשימה נטענה")}catch(e){toast("הטעינה נכשלה")}}
+/* ---------- my documents (private: data/users/<uid>) ---------- */
+function vDocs(){const head=toolHead("המסמכים שלי","פרטי – רק את/ה רואה את המסמכים כאן, גם כשהקישור משותף. נשמר במכשיר של כל אחד בנפרד דרך החשבון.");
+  if(!uid)return head+`<div class="empty"><h3>זמין כשהדף פתוח מחובר</h3><p>פתחו את הדף ב־claude.ai עם החשבון שלכם.</p></div>`;
+  const tdac=myDocs.filter(d=>d.type==="tdac"),other=myDocs.filter(d=>d.type!=="tdac");
+  return head+tdac.map(tdacCard).join("")+`<section class="sec"><div class="sec-h"><h2>מסמכים נוספים</h2><button class="btn sm" type="button" data-act="adddoc">${ico("i-plus")}מסמך</button></div>
+   ${other.length?`<div class="docgrid">${other.map(d=>`<button class="docth" type="button" data-act="viewdoc" data-did="${esc(d.id)}"><img src="${esc(d.img)}" alt=""><span>${bdi(d.title||"מסמך")}</span></button>`).join("")}</div>`:`<div class="empty"><p>צילום דרכון, פוליסת ביטוח, כרטיס טיסה – צלמו או העלו צילום מסך, וזה יהיה כאן גם בלי לחפש בגלריה.</p></div>`}</section>`}
+function tdacCard(d){return `<section class="tdac"><div class="tdh"><span class="ti green">${ico("i-check")}</span><div><b>כרטיס כניסה לתאילנד · TDAC</b><small>${bdi(d.name||"")} · נחיתה ${d.arrival?fShort(d.arrival):""} · טיסה <bdi dir="ltr">${esc(d.flight||"")}</bdi></small></div></div>
+  <button class="tdimg" type="button" data-act="viewdoc" data-did="${esc(d.id)}" aria-label="הצגה במסך מלא"><img src="${esc(d.img)}" alt="כרטיס הכניסה עם קוד QR"></button>
+  <div class="tdno"><span>מספר כרטיס</span><b dir="ltr">${esc(d.number||"")}</b><button class="iconbtn cp" type="button" data-act="copy" data-v="${esc(d.number||"")}" aria-label="העתקה">${ico("i-copy")}</button></div>
+  <div class="dactions"><button class="btn" type="button" data-act="viewdoc" data-did="${esc(d.id)}">הצגה בדלפק</button>${d.full?`<button class="btn ghost" type="button" data-act="viewfull" data-did="${esc(d.id)}">המסמך המלא</button>`:""}${safeUrl(d.link)?`<a class="btn ghost" href="${esc(d.link)}" target="_blank" rel="noopener">${ico("i-link")}לאתר הרשמי</a>`:""}</div></section>`}
+function viewDoc(id,full){const d=myDocs.find(x=>x.id===id);if(!d)return;
+  openSheet(d.type==="tdac"?"TDAC · להצגה":d.title||"מסמך",`<div class="docview">${d.type==="tdac"&&!full?`${d.qr?`<img class="bigqr" src="${esc(d.qr)}" alt="QR של כרטיס הכניסה">`:""}<div class="bigno"><span dir="ltr">TH Digital Arrival Card No.</span><b dir="ltr">${esc(d.number)}</b><small dir="ltr">${esc(d.name||"")} · ${esc(d.flight||"")}</small></div>`:""}<img src="${esc(full&&d.full?d.full:d.img)}" alt="">${d.type!=="tdac"?`<p class="dactions"><button class="danger-link" type="button" data-act="deldoc" data-did="${esc(d.id)}">מחיקת המסמך</button></p>`:""}<p class="it-m">טיפ: הגבירו את בהירות המסך כשמציגים ברקוד.</p></div>`)}
+let pendingDoc=false;
+function addDoc(){if(!uid){toast("זמין כשהדף פתוח מחובר");return}pendingDoc=true;$("#photoIn").click()}
+async function saveDocImage(f){try{const data=await shrink(f,1400,.72);if(data.length>245000){toast("הקובץ גדול מדי");return}
+  const title=(f.name||"מסמך").replace(/\.[a-z0-9]+$/i,"").slice(0,40);
+  await db.collection("data/users/"+uid).doc().set({kind:"doc",type:"image",title,img:data,addedAt:new Date().toISOString()});toast("נשמר במסמכים שלך")}catch(e){toast("לא הצלחתי לשמור את המסמך")}}
 function openFx(){openSheet("שער חליפין",`<form class="ed" id="fxForm" novalidate><h2>כמה באט בשקל?</h2>
   <label>₪1 =<input name="r" inputmode="decimal" dir="ltr" value="${fx}" autofocus></label><span class="hint">השער שהוזן מבוסס על אמצע נובמבר 2026 (בערך 10.5). בכספומט ובחלפנים תקבלו מעט פחות.</span>
   <div class="formacts"><button class="btn" type="submit">שמירה</button><button class="btn ghost" type="button" data-act="closesheet">ביטול</button></div></form>`,()=>{
@@ -1484,6 +1519,10 @@ async function handleAct(el,e){const a=el.dataset.act,id=el.dataset.id;
    case "quickadd":openQuick();break;
    case "settings":openSettings();break;
    case "fx":openFx();break;
+   case "viewdoc":viewDoc(el.dataset.did,false);break;
+   case "viewfull":viewDoc(el.dataset.did,true);break;
+   case "adddoc":addDoc();break;
+   case "deldoc":{const d=myDocs.find(x=>x.id===el.dataset.did);closeSheet();if(d){try{await db.collection("data/users/"+uid).doc(d.id).delete();toast("המסמך נמחק")}catch(e){toast("המחיקה נכשלה")}}break}
    case "newexp":openExpense(null);break;
    case "editexp":openExpense(expenses.find(x=>x.id===el.dataset.xid));break;
    case "delexp":{const x=expenses.find(y=>y.id===el.dataset.xid);closeSheet();if(x){const c={...x};delete c.id;try{await db.collection("expenses").doc(x.id).delete();toast("ההוצאה נמחקה","ביטול",()=>db.collection("expenses").doc(x.id).set(c))}catch(err){toast("המחיקה נכשלה")}}break}
@@ -1546,6 +1585,7 @@ document.addEventListener("focusout",e=>{const t=e.target;
 async function saveNote(k,text){if(!db||!canWrite)return;try{await db.doc("notes/"+k).set({text,updatedAt:new Date().toISOString()});const el=$("#noteInd");if(el)el.textContent="נשמר"}catch(e){const el=$("#noteInd");if(el)el.textContent="השמירה נכשלה"}}
 let pendingPhoto=null,pendingEntryPhoto=false;
 $("#photoIn").addEventListener("change",async e=>{const f=e.target.files[0];e.target.value="";
+  if(f&&pendingDoc){pendingDoc=false;await saveDocImage(f);return}
   if(f&&pendingEntryPhoto){pendingEntryPhoto=false;try{entryDraft.photos.push(await shrink(f,720,.62));renderEntPhotos()}catch(err){toast("לא הצלחתי לקרוא את התמונה")}return}
   if(!f||!pendingPhoto||!db)return;
   try{toast("מעלה תמונה…");const data=await shrink(f,1100,.74);if(data.length>240000){toast("התמונה גדולה מדי");return}
@@ -1648,7 +1688,7 @@ route=readHash();render(true);
       const ae=document.activeElement;const typing=ae&&(ae.tagName==="TEXTAREA"||ae.tagName==="INPUT")&&$("#main").contains(ae)&&ae.id!=="chq";if(!typing)render();if(sheetOn&&$("#sheetBody .detail h2")&&F.openId){} if(ccOn)renderChat();
       document.querySelectorAll("[data-minimap]").forEach(drawMini)},e=>{clearTimeout(timer);status("החיבור נפל – רעננו","err")});
     try{uid=userNs&&userNs.id?await userNs.id():null}catch(e){uid=null}
-    if(uid)db.collection("data/users/"+uid).onSnapshot(s=>{myEntries=s.docs.map(d=>({id:d.id,...d.data()})).filter(d=>d.kind==="entry");if(route==="journal")render()},()=>{});
+    if(uid)db.collection("data/users/"+uid).onSnapshot(s=>{const all=s.docs.map(d=>({id:d.id,...d.data()}));myEntries=all.filter(d=>d.kind==="entry");myDocs=all.filter(d=>d.kind==="doc");if(["journal","docs","tools","today"].includes(route)&&!sheetOn)render()},()=>{});
     db.collection("entries").onSnapshot(s=>{sharedEntries=s.docs.map(d=>({id:d.id,...d.data()})).filter(d=>d.kind==="entry");if(route==="journal")render()},()=>{});
     db.collection("photos").onSnapshot(s=>{photos=s.docs.map(d=>({id:d.id,...d.data()}));if(route==="journal")render()},()=>{});
     const rr=()=>{if(TOOLR.includes(route)&&!sheetOn&&!(document.activeElement&&document.activeElement.closest&&document.activeElement.closest(".padd,.conv")))render()};
