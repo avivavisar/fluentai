@@ -1678,7 +1678,13 @@ async function exportBackup(){try{const data=JSON.stringify({exportedAt:new Date
 let ccOn=false,busy=false;
 const AGENT=`אתה הסוכן האישי (הקונסיירז') של אביב ואופק, שני חברים בני 28 בטיול בתאילנד (25.11–20.12.2026). סגנון: חיי לילה, טכנו ו-EDM, ביץ' קלאבים, איים, אקסטרים, אוכל רחוב ומסעדות טובות, Hidden Gems. לא טיול משפחתי.
 מלונות: פוקט 25.11–1.12 Hotel Clover Patong; קופנגן 1–6.12 Phangan Bayshore Resort (האד רין נוק); קוסמוי 6–12.12 Arkbar Beach Club & Resort (צ'אוונג); פטאיה 12–18.12 Hotel Amber Pattaya (ליד Soi Buakhao); בנגקוק 18–20.12 Novotel Platinum Pratunam.
-כללים: ענה תמיד בעברית, ישיר וקצר כמו חבר שמכיר את תאילנד. שמות מקומות כתוב באותיות לטיניות כמו שהם (Catch Beach Club), לא בתעתיק. מחירים בבאט עם ฿. התחשב במיקום המלון ובשעה. המלץ רק על דברים ביעד שבו הם נמצאים בתאריך הרלוונטי לפי המסלול; אירוע ביעד אחר או בתאריך שבו הם לא שם – לא רלוונטי, אל תציע אותו. אל תמציא מקומות, מחירים, שעות או אירועים; אין לך גישה לאינטרנט כאן – אם צריך מידע עדכני (מסיבה הערב, תחזית) אמור זאת והצע לבדוק בשיחה הראשית עם Claude. סווג MUST/HIGH/OPTIONAL/HIDDEN GEM/BACKUP ותן התאמה 1–10 כשממליץ. כשמבקשים להוסיף, לסמן, לשבץ ליום, להזיז או לעדכן פריט – השתמש בכלים. כשמדווחים על הוצאה ("שילמתי 600 על ארוחה") – רשום אותה עם add_expense (שאל מי שילם אם לא ברור) והחזר את המאזן.
+איך לענות: אתה כמו חבר ישראלי שגר בתאילנד שנים ומכיר כל פינה – לא רק את הרשימה שלהם. ענה תמיד בעברית, בגובה העיניים, עשיר ומעשי.
+- השתמש בכל הידע שלך על תאילנד: מועדונים, ביץ' קלאבים, ברים, שכונות, אוכל מקומי, עיסוי, אטרקציות, תחבורה, מחירים טיפוסיים, טריקים, הונאות שכדאי להכיר, ומה שווה באמת לעומת מלכודות תיירים.
+- כשהם שואלים "מה יש" (למשל חיי לילה בפטאיה) – תן תמונה מלאה: האזורים, המקומות הבולטים, מה מתאים לסגנון שלהם ומה לא, ובאיזה סדר לעשות את זה. שלב פריטים מהמאגר שלהם (עם [[id]]) והוסף המלצות חדשות מהידע שלך, מסומנות "לא ברשימה שלכם". בסוף הצע להוסיף את מה שמתאים לרשימה (עם add_item).
+- דייק: אל תמציא שמות של מקומות שאתה לא בטוח שקיימים. פרטים שמשתנים (שעות פתיחה, מחיר כניסה, מי מנגן הערב, האם מקום עדיין פתוח) – תן הערכה וציין שכדאי לוודא. אין לך גלישה באינטרנט כרגע, אז על אירועים של הלילה הספציפי אמור שזה צריך בדיקה.
+- התחשב במלון, בשעה ובאיפה שהם נמצאים לפי המסלול. אירוע ביעד אחר או בתאריך שבו הם לא שם – לא רלוונטי.
+- סגנון: פסקאות קצרות וכותרות קטנות כשיש הרבה מידע, בלי חפירות. שמות מקומות באותיות לטיניות כמו שהם (Catch Beach Club). מחירים בבאט עם ฿. כשממליץ – אפשר לתת התאמה 1–10.
+- כשמבקשים להוסיף, לסמן, לשבץ ליום, להזיז או לעדכן פריט – השתמש בכלים. כשמדווחים על הוצאה ("שילמתי 600 על ארוחה") – רשום אותה עם add_expense (שאל מי שילם אם לא ברור) והחזר את המאזן.
 כשאתה מזכיר פריט שקיים במאגר, כתוב את המזהה שלו בסוגריים כפולים, למשל [[p04]], והאפליקציה תציג אותו ככרטיס לחיץ. אל תכתוב את המזהה בשום צורה אחרת.
 שיבוץ למסלול: לפריט יש date (YYYY-MM-DD, רק בין 2026-11-25 ל-2026-12-20) ו-time (HH:MM). לשבץ = update_item עם date ו-time. "זמן חופשי" = kind "free". מחיקה דורשת אישור של המשתמש באפליקציה – השתמש ב-delete_item ותגיד שצריך לאשר.`;
 const ccTools=[
@@ -1719,7 +1725,7 @@ function actsHtml(m,mi){if(!m.acts||!m.acts.length)return "";return `<div class=
 function describePatch(p){if(!p)return "";const o=[];if(p.date!==undefined)o.push(p.date?`יום ${dayNo(p.date)}`:"הוסר מהמסלול");if(p.time)o.push(p.time);if(p.status!==undefined)o.push(p.status?ST[p.status]:"ללא סטטוס");if(p.fav!==undefined)o.push(p.fav?"מועדף":"לא מועדף");if(p.rating)o.push(p.rating+"★");if(p.mine!==undefined||p.note!==undefined)o.push("הערה");return o.join(" · ")}
 function renderChat(){const box=$("#ccMsgs");if(!box)return;
   if(!sample){box.innerHTML=`<div class="cc-hello"><h3>הקונסיירז'</h3><p class="cc-off">${sampleState==="loading"?"מתחבר…":"הקונסיירז' זמין כשהדף פתוח ב־claude.ai עם חשבון מחובר."}</p></div>`;return}
-  const hello=`<div class="cc-hello"><h3>מה בא לכם?</h3><p>אני מכיר את המסלול, המלונות והמאגר שלכם. אני יכול לתכנן יום, לשבץ, להזיז, לסמן ולהוסיף. בלי אינטרנט – אז על מסיבות של הלילה ותחזיות, נבדוק בשיחה הראשית.</p></div>`;
+  const hello=`<div class="cc-hello"><h3>מה בא לכם?</h3><p>שאלו כמו שאתם שואלים חבר שגר כאן: איפה יוצאים, מה אוכלים, איך מגיעים, מה שווה ומה מלכודת. אני מכיר את המסלול והרשימה שלכם, וגם הרבה מעבר להם – ויכול להוסיף, לשבץ ולסמן בשבילכם. על מה שקורה הלילה ספציפית – אגיד מה כדאי לוודא.</p></div>`;
   box.innerHTML=(chat.length?"":hello)+chat.map((m,mi)=>m.r==="u"?`<div class="msg u" dir="auto">${esc(m.t)}</div>`:`<div class="msg a ${m.think?"think":""}"><div class="by">${ico("i-seal","seal")}הקונסיירז'</div><div class="txt" dir="rtl">${richText(m.t)}</div>${actsHtml(m,mi)}</div>`).join("");
   box.scrollTop=box.scrollHeight}
 async function persistChat(){if(!db||!canWrite)return;try{await db.doc("chat/log").set({messages:chat.slice(-60).map(({think,...m})=>m),updatedAt:new Date().toISOString()})}catch(e){}}
@@ -1740,7 +1746,7 @@ async function sendCC(t){if(!sample){toast("הקונסיירז' לא זמין כ
   const notes=Object.entries(notesDocs).filter(([,n])=>n.text).map(([k,n])=>`${k}: ${n.text}`).join("\n");
   const input=`${AGENT}\n\nזמן מקומי בתאילנד: ${simDate?td+" (תצוגה מדומה)":nb.date} ${nb.time}. ${S?`היום הוא יום ${dayNo(td)} מתוך 26, ב${S.n}.`:td<TRIP.s?`הטיול מתחיל בעוד ${diffDays(td,TRIP.s)} ימים.`:"הטיול הסתיים."}\nהמשתמש נמצא ב: ${v}.\nימי הטיול: ${days}\n${notes?`הפנקסים לפי יעד:\n${notes}\n`:""}${jr?`מהיומן שלהם:\n${jr}\n`:""}${expenses.length?`הוצאות: סה"כ ${thb(sumOf(expenses))} (₪${ilsN(sumOf(expenses))}), ${balanceText()}. לפי קטגוריה: ${XCATS.map(([k,n])=>[n,sumOf(expenses.filter(e=>e.cat===k))]).filter(x=>x[1]).map(([n,v])=>n+" "+thb(v)).join(", ")}. שער: ₪1=฿${fx}.\n`:""}המאגר (JSON):\n${JSON.stringify(lite)}\n\nהשיחה עד עכשיו:\n${hist||"(אין)"}\n\nההודעה החדשה: ${t}`;
   const live={r:"a",t:"חושב",think:true,acts:[]};chat=[...chat,live];curActs=live.acts;renderChat();
-  try{const res=await sample(input,{cache:false,tools:ccTools,onText:({text})=>{live.think=false;live.t=text;renderChat()}});live.t=res.text||live.t;live.think=false}
+  try{const res=await sample(input,{cache:false,modelTier:"complex",tools:ccTools,onText:({text})=>{live.think=false;live.t=text;renderChat()}});live.t=res.text||live.t;live.think=false}
   catch(err){live.think=false;live.t=err&&err.text?err.text:err&&err.code==="rate_limited"?"יותר מדי בקשות. נסו שוב בעוד דקה.":err&&err.code==="not_granted"?"הקונסיירז' לא אושר בדף הזה. אפשר לאשר בתפריט ההרשאות של הדף.":"משהו נכשל. נסו שוב."}
   live.at=new Date().toISOString();chat=[...chat];renderChat();await persistChat();busy=false;render()}
 /* dictation */
