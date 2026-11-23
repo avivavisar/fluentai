@@ -492,6 +492,10 @@ form.ed .amt input{font:700 30px/1 var(--f-display);height:62px;text-align:right
 .fref .cp{width:34px;height:34px;border-radius:10px;background:var(--paper)}.fref .cp svg{width:16px;height:16px}
 .fmeta{font-size:12.5px;color:var(--ink-3)}
 .fcard .btn{justify-self:start}
+.bpcode{justify-self:center;width:min(70%,260px);background:#fff;border-radius:14px;padding:10px;border:1px solid var(--line)}
+.bpcode img{display:block;width:100%;height:auto;image-rendering:pixelated}
+.bpinfo{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}
+.bpinfo small{display:block;font-size:11.5px;color:var(--ink-3)}.bpinfo b{font:700 16px/1.2 var(--f-display)}
 .vcard{display:flex;gap:14px;align-items:flex-start;margin-top:14px;background:var(--raise);border-radius:var(--r-l);box-shadow:var(--sh-2);padding:16px;border:1px solid color-mix(in srgb,var(--brand) 25%,transparent)}
 .vcard b{display:block;font:600 16px/1.3 var(--f-display)}.vcard p{font-size:14px;color:var(--ink-2);margin:4px 0 10px;line-height:1.55}.vcard>div{flex:1;min-width:0}
 .vrow{display:flex;gap:8px}.vrow input{flex:1;height:44px;border:1px solid var(--line-2);border-radius:12px;background:var(--paper);padding:0 12px;outline:0;font-size:17px}
@@ -1049,7 +1053,9 @@ function vToday(){
   const nextHtml=nxt&&!post?`<a class="next" href="#${nxt.k}"><div class="plate" data-plate="${nxt.k}" role="img" aria-label="${nxt.n}"></div><div><div class="eyebrow">${pre?"הפרק הראשון":"הפרק הבא"} · <span class="mono">${fShort(nxt.s)}</span></div><h3>${nxt.n}</h3><p>${bdi(nxt.hotel.name)} · ${diffDays(t,nxt.s)>0?`בעוד ${diffDays(t,nxt.s)} ימים`:"היום"}</p></div><span class="go">${ico("i-next")}</span></a>`:"";
   const td=allDocs().find(d=>d.type==="tdac");const showTd=td&&(!td.arrival||t<=addDays(td.arrival,1));
   const tds=allDocs().filter(d=>d.type==="tdac");
-  const tdBar=showTd?(tds.length>1?`<a class="tdquick" href="#docs"><span class="ti green">${ico("i-lock")}</span><span class="tt"><b>כרטיסי הכניסה מוכנים להצגה</b><small>${tds.map(d=>esc((d.name||"").split(" ")[0])).join(" · ")} · TDAC</small></span>${ico("i-next","chev")}</a>`:`<button class="tdquick" type="button" data-act="viewdoc" data-did="${esc(td.id)}"><span class="ti green">${ico("i-lock")}</span><span class="tt"><b>כרטיס הכניסה מוכן להצגה</b><small>TDAC <bdi dir="ltr">${esc(td.number||"")}</bdi> · לחיצה לפתיחה</small></span>${ico("i-next","chev")}</button>`):"";
+  const bp=allDocs().filter(d=>d.type==="boarding"&&d.date&&d.date>=t&&diffDays(t,d.date)<=2).sort((a,b)=>a.date.localeCompare(b.date))[0];
+  const bpBar=bp?`<button class="tdquick" type="button" data-act="viewdoc" data-did="${esc(bp.id)}"><span class="ti sea">${ico("i-ticket")}</span><span class="tt"><b>כרטיס עלייה · <bdi dir="ltr">${esc(bp.flight||"")}</bdi></b><small>עלייה ${esc(bp.boarding||"")} · מושב <bdi dir="ltr">${esc(bp.seat||"")}</bdi> · לחיצה לברקוד</small></span>${ico("i-next","chev")}</button>`:"";
+  const tdBar=bpBar+(showTd?(tds.length>1?`<a class="tdquick" href="#docs"><span class="ti green">${ico("i-lock")}</span><span class="tt"><b>כרטיסי הכניסה מוכנים להצגה</b><small>${tds.map(d=>esc((d.name||"").split(" ")[0])).join(" · ")} · TDAC</small></span>${ico("i-next","chev")}</a>`:`<button class="tdquick" type="button" data-act="viewdoc" data-did="${esc(td.id)}"><span class="ti green">${ico("i-lock")}</span><span class="tt"><b>כרטיס הכניסה מוכן להצגה</b><small>TDAC <bdi dir="ltr">${esc(td.number||"")}</bdi> · לחיצה לפתיחה</small></span>${ico("i-next","chev")}</button>`):"");
   return `${hero}${tdBar}${progressHtml()}
    <div class="twocol"><div>${main}</div><aside>
     <section class="sec"><div class="sec-h"><h2>${pre?"היעד הראשון":"מה הלאה"}</h2></div>${nextHtml||'<p class="lede">זה הפרק האחרון.</p>'}</section>
@@ -1440,8 +1446,15 @@ document.addEventListener("submit",e=>{if(e.target.id==="vuForm"){e.preventDefau
 async function vaultMoveAll(){if(!vaultKey||!uid||vaultBusy)return;vaultBusy=true;let n=0;
   try{for(const d of [...myDocs]){const{id,_v,...body}=d;await db.collection("vault").doc(id).set({...(await vEnc(vaultKey,body)),at:new Date().toISOString()});await db.collection("data/users/"+uid).doc(id).delete();n++;toast(`מעביר… ${n}/${myDocs.length||n}`)}
    toast(`${n} מסמכים עברו לתיק המשותף`)}catch(e){toast("ההעברה נעצרה – נסו שוב")}vaultBusy=false}
-function docsLists(L,canAdd){const tdac=L.filter(d=>d.type==="tdac"),flights=L.filter(d=>d.type==="flight").sort((a,b)=>((a.legs||[{}])[0].date||"").localeCompare((b.legs||[{}])[0].date||"")),other=L.filter(d=>d.type!=="tdac"&&d.type!=="flight");
-  return (tdac.length?`<section class="sec"><div class="sec-h"><h2>כרטיסי כניסה</h2><span class="it-m">${tdac.length}</span></div>${tdac.map(tdacCard).join("")}</section>`:"")+
+function boardingCard(d){const past=d.date&&d.date<today();
+  return `<article class="fcard bp ${past?"past":""}"><div class="fch"><b>${bdi(d.title||"כרטיס עלייה")}</b><span class="vis">${bdi(d.who||"")}</span></div>
+   <button class="bpcode" type="button" data-act="viewdoc" data-did="${esc(d.id)}" aria-label="הצגת הברקוד במסך מלא"><img src="${esc(d.qr||d.img)}" alt="ברקוד כרטיס העלייה"></button>
+   <div class="leg"><div class="lf"><b dir="ltr">${esc(d.flight||"")}</b><small>${d.date?fmt(d.date,{weekday:"short",day:"numeric",month:"numeric"}):""}</small></div>
+    <div class="lr" dir="ltr"><span><b>${esc(d.dep||"")}</b><small>${esc(d.from||"")}</small></span><i></i><span><b>${esc(d.arr||"")}</b><small>${esc(d.to||"")}</small></span></div>${d.seat?`<div class="seat"><small>מושב</small><b dir="ltr">${esc(d.seat)}</b></div>`:""}</div>
+   <div class="bpinfo">${d.bagsBy?`<div><small>מזוודות עד</small><b>${esc(d.bagsBy)}</b></div>`:""}${d.boarding?`<div><small>עלייה</small><b>${esc(d.boarding)}</b></div>`:""}${d.group?`<div><small>קבוצה</small><b>${esc(d.group)}</b></div>`:""}${d.gate?`<div><small>שער</small><b>${esc(d.gate)}</b></div>`:`<div><small>שער</small><b>–</b></div>`}</div>
+   <button class="btn sm" type="button" data-act="viewdoc" data-did="${esc(d.id)}">הצגה בשער</button></article>`}
+function docsLists(L,canAdd){const bps=L.filter(d=>d.type==="boarding").sort((a,b)=>(a.date||"").localeCompare(b.date||"")),tdac=L.filter(d=>d.type==="tdac"),flights=L.filter(d=>d.type==="flight").sort((a,b)=>((a.legs||[{}])[0].date||"").localeCompare((b.legs||[{}])[0].date||"")),other=L.filter(d=>!["tdac","flight","boarding"].includes(d.type));
+  return (bps.length?`<section class="sec"><div class="sec-h"><h2>כרטיסי עלייה</h2><span class="it-m">${bps.length}</span></div>${bps.map(boardingCard).join("")}</section>`:"")+(tdac.length?`<section class="sec"><div class="sec-h"><h2>כרטיסי כניסה</h2><span class="it-m">${tdac.length}</span></div>${tdac.map(tdacCard).join("")}</section>`:"")+
    (flights.length?`<section class="sec"><div class="sec-h"><h2>כרטיסי טיסה</h2><span class="it-m">${flights.length}</span></div>${flights.map(flightCard).join("")}</section>`:"")+
    `<section class="sec"><div class="sec-h"><h2>מסמכים נוספים</h2>${canAdd?`<button class="btn sm" type="button" data-act="adddoc">${ico("i-plus")}מסמך</button>`:""}</div>
    ${other.length?`<div class="docgrid">${other.map(d=>`<button class="docth" type="button" data-act="viewdoc" data-did="${esc(d.id)}"><img src="${esc(d.img)}" alt=""><span>${bdi(d.title||"מסמך")}</span></button>`).join("")}</div>`:`<div class="empty"><p>צילום דרכון, פוליסת ביטוח, אישור מלון – העלו צילום מסך, וזה יהיה כאן.</p></div>`}</section>`}
@@ -1458,6 +1471,7 @@ function vDocs(){const head=toolHead("המסמכים","כרטיסי כניסה, 
    (uid&&myDocs.length?`<section class="vcard"><span class="ti amber">${ico("i-arrow")}</span><div><b>${myDocs.length} מסמכים עדיין רק אצלך</b><p>מעבירים אותם לתיק כדי שגם אופק יראה. הם נמחקים מהאזור הפרטי אחרי ההעברה.</p><button class="btn sm" type="button" data-act="vmove">העברה לתיק המשותף</button></div></section>`:"")+
    (vaultRaw.length&&!vaultDocs.length?`<p class="it-m" style="margin-top:12px">מפענח…</p>`:docsLists(vaultDocs,true))}
 function viewDoc(id,full){const d=allDocs().find(x=>x.id===id);if(!d)return;
+  if(d.type==="boarding"&&!full){openSheet("כרטיס עלייה · להצגה",`<div class="docview">${d.qr?`<img class="bigqr" src="${esc(d.qr)}" alt="ברקוד כרטיס העלייה">`:""}<div class="bigno"><span dir="ltr">${esc(d.name||"")}</span><b dir="ltr">${esc(d.flight||"")}</b><small dir="ltr">${esc(d.from||"")} → ${esc(d.to||"")} · Seat ${esc(d.seat||"")} · Boarding ${esc(d.boarding||"")} · Group ${esc(d.group||"")}</small></div><button class="btn ghost sm" type="button" data-act="viewfull" data-did="${esc(d.id)}">הכרטיס המקורי</button><p class="it-m">טיפ: הגבירו את בהירות המסך כשסורקים.</p></div>`);return}
   openSheet(d.type==="tdac"?"TDAC · להצגה":d.title||"מסמך",`<div class="docview">${d.type==="tdac"&&!full?`${d.qr?`<img class="bigqr" src="${esc(d.qr)}" alt="QR של כרטיס הכניסה">`:""}<div class="bigno"><span dir="ltr">TH Digital Arrival Card No.</span><b dir="ltr">${esc(d.number)}</b><small dir="ltr">${esc(d.name||"")} · ${esc(d.flight||"")}</small></div>`:""}<img src="${esc(full&&d.full?d.full:d.img)}" alt="">${d.type!=="tdac"?`<p class="dactions"><button class="danger-link" type="button" data-act="deldoc" data-did="${esc(d.id)}">מחיקת המסמך</button></p>`:""}<p class="it-m">טיפ: הגבירו את בהירות המסך כשמציגים ברקוד.</p></div>`)}
 let pendingDoc=false;
 function addDoc(){if(!vaultKey&&!uid){toast("פתחו את התיק המשותף קודם");return}pendingDoc=true;$("#photoIn").click()}
